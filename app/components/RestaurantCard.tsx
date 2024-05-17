@@ -8,6 +8,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Favorite, FavoriteBorderOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { Restaurant } from "./Restaurant";
+import Link from 'next/link';
 
 const StyledCard = styled(Card)(() => ({
   display: "flex",
@@ -76,27 +78,19 @@ const StyledFavFilledIcon = styled(Favorite)(() => ({
 const TypographyTitle = styled(Typography)(() => ({
   display: "flex",
   alignItems: "center",
-  /* fontSize: "1.2rem",
-  fontWeight: 400, */
   color: "black",
   width: "100%",
   height: "2rem"
 }));
 
 const TypographyInfo = styled(Typography)(() => ({
-  /*  fontSize: "1rem",
-   fontWeight: 200, */
   width: "100%",
   color: "gray",
   display: "flex",
   alignContent: "flex-start",
 }));
 
-type RestaurantCardProps = {
-  name: string, rating: number, time: string; image: string, favorite: boolean
-};
-
-export function RestaurantCard(props: RestaurantCardProps) {
+export function RestaurantCard(props: Restaurant) {
   return (
     <StyledCard>
       <StyledCardMedia image={props.image}>
@@ -104,16 +98,18 @@ export function RestaurantCard(props: RestaurantCardProps) {
           {props.favorite ? <StyledFavFilledIcon /> : <StyledFavIcon />}
         </FavoriteButton>
       </StyledCardMedia>
-      <BoxRestaurantInfo>
-        <StyledDivCardContent>
-          <TypographyTitle variant="h6">{props.name}</TypographyTitle>
-          <StyledDivRatio>{props.rating}
-          </StyledDivRatio>
-        </StyledDivCardContent>
-        <StyledDivCardContent>
-          <TypographyInfo variant="body1">{props.time}</TypographyInfo>
-        </StyledDivCardContent>
-      </BoxRestaurantInfo>
+      <Link href={`/restaurant/${props.slug}`} passHref>
+        <BoxRestaurantInfo>
+          <StyledDivCardContent>
+            <TypographyTitle variant="h6">{props.name}</TypographyTitle>
+            <StyledDivRatio>{props.rating}
+            </StyledDivRatio>
+          </StyledDivCardContent>
+          <StyledDivCardContent>
+            <TypographyInfo variant="body1">{props.time}</TypographyInfo>
+          </StyledDivCardContent>
+        </BoxRestaurantInfo>
+      </Link>
     </StyledCard >
   );
 }

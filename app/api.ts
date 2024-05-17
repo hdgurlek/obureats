@@ -4,6 +4,7 @@ export function getRestaurants() {
       id: "0",
       name: "Dilara's Kitchen",
       rating: 3.6,
+      slug: "dilara-s-kitchen",
       favorite: true,
       image:
         "https://tb-static.uber.com/prod/image-proc/processed_images/bf8d432616cba7ebb227d460a48cc234/fb86662148be855d931b37d6c1e5fcbe.webp",
@@ -12,6 +13,7 @@ export function getRestaurants() {
     {
       id: "1",
       name: "Omer Kokorec",
+      slug: "omer-kokorec",
       rating: 2.1,
       favorite: false,
       image:
@@ -21,6 +23,7 @@ export function getRestaurants() {
     {
       id: "2",
       name: "Yagmur Waffle",
+      slug: "yagmur-waffle",
       rating: 4.0,
       favorite: true,
       image:
@@ -30,6 +33,7 @@ export function getRestaurants() {
     {
       id: "3",
       name: "Enes Ocakbasi",
+      slug: "enes-ocakbasi",
       rating: 3.9,
       favorite: true,
       image:
@@ -40,3 +44,20 @@ export function getRestaurants() {
 
   return restaurants;
 }
+
+export function getRestaurant(slug: string) {
+  const restaurant = {
+    id: "sdf",
+    name: "Enes Ocakbasi",
+    slug: "enes-ocakbasi",
+    rating: "2.3",
+    favorite: true,
+    image:
+      "https://tb-static.uber.com/prod/image-proc/processed_images/f57fb461cfafbbb63b57e8a50c81c5d0/f3376a06b92224efbe50167fb7cb61e4.jpeg",
+    time: "20-30 min",
+  };
+
+  return restaurant;
+}
+
+export function getRestaurantMenu() {}
