@@ -6,14 +6,14 @@ import Grid from '@mui/material/Grid';
 import { RestaurantCard } from './RestaurantCard';
 import { getRestaurants } from '../api';
 
-const RestaurantGridBox = styled(Box)(() => ({
+const GridBox = styled(Box)(() => ({
     display: "flex",
     flexGrow: "1",
     justifyContent: "center",
     alignItems: "center"
 }));
 
-const GridContainer = styled(Grid)(({ theme }) => ({
+const GridContainer = styled(Grid)(() => ({
     display: 'flex',
     gap: '1.6rem',
     alignItems: 'center',
@@ -24,13 +24,13 @@ let restaurants = getRestaurants();
 
 export default function RestaurantGrid() {
     return (
-        <RestaurantGridBox>
+        <GridBox>
             <GridContainer container>{
                 restaurants.map(
                     (item) =>
-                        <RestaurantCard id={item.id} key={item.id} name={item.name} slug={item.slug} rating={item.rating} time={item.time} favorite={item.favorite} image={item.image}>
+                        <RestaurantCard id={item.id} key={item.id} name={item.name} slug={item.slug} rating={item.rating} deliveryTime={item.deliveryTime} favorite={item.favorite} image={item.image}>
                         </RestaurantCard>)
             }</GridContainer>
-        </RestaurantGridBox>
+        </GridBox>
     );
 }

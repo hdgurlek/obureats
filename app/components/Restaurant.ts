@@ -5,5 +5,5 @@ export type Restaurant = {
   rating: number;
   favorite: boolean;
   image: string;
-  time: string;
+  deliveryTime: string;
 };

@@ -4,8 +4,6 @@ import RestaurantGrid from './components/RestaurantGrid';
 export default function Home() {
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-      </div>
       <div className={styles.center}>
         <RestaurantGrid>
         </RestaurantGrid>

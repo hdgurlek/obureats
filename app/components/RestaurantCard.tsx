@@ -10,8 +10,9 @@ import { Favorite, FavoriteBorderOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { Restaurant } from "./Restaurant";
 import Link from 'next/link';
+import "../globals.css";
 
-const StyledCard = styled(Card)(() => ({
+const Container = styled(Card)(() => ({
   display: "flex",
   flexDirection: "column",
   width: 288,
@@ -19,9 +20,10 @@ const StyledCard = styled(Card)(() => ({
   overflow: "visible",
   transition: "0.4s",
   boxShadow: "none",
+  borderRadius: "0.5rem",
 }));
 
-const StyledCardMedia = styled(CardMedia)({
+const RestaurantImage = styled(CardMedia)({
   display: "flex",
   position: "relative",
   width: "100%",
@@ -29,7 +31,7 @@ const StyledCardMedia = styled(CardMedia)({
   borderRadius: "0.5rem",
 });
 
-const BoxRestaurantInfo = styled(Box)(() => ({
+const InfoBox = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -40,7 +42,7 @@ const BoxRestaurantInfo = styled(Box)(() => ({
   alignContent: "center"
 }));
 
-const StyledDivCardContent = styled("div")(() => ({
+const InfoContent = styled("div")(() => ({
   display: "flex",
   width: "100%",
   alignContent: "center",
@@ -48,17 +50,22 @@ const StyledDivCardContent = styled("div")(() => ({
   alignItems: "center"
 }));
 
-const StyledDivRatio = styled("div")(() => ({
+const RatingBadge = styled("div")(() => ({
   display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "50%",
-  backgroundColor: "#d5d5d5",
-  padding: "0.5rem 0.5rem",
+  alignContent: "center",
+  justifyContent: "center", width: "1.8rem",
+  height: "1.8rem",
   fontWeight: "600",
   fontSize: "13px",
-  width: "1.8rem",
-  height: "1.8rem"
+  borderRadius: "50%",
+  padding: "0.2rem 0.2rem",
+  backgroundColor: "#d5d5d5",
+}));
+
+const RatingText = styled(Typography)(() => ({
+  display: "flex",
+  alignItems: "center",
+  padding: "0.4rem 0.4rem",
 }));
 
 const FavoriteButton = styled(IconButton)(() => ({
@@ -69,21 +76,21 @@ const FavoriteButton = styled(IconButton)(() => ({
   color: "#FFF",
 }));
 
-const StyledFavIcon = styled(FavoriteBorderOutlined)(() => ({
+const FavoriteIcon = styled(FavoriteBorderOutlined)(() => ({
 }));
 
-const StyledFavFilledIcon = styled(Favorite)(() => ({
+const FilledFavoriteIcon = styled(Favorite)(() => ({
 }));
 
-const TypographyTitle = styled(Typography)(() => ({
+const RestaurantName = styled(Typography)(() => ({
   display: "flex",
   alignItems: "center",
   color: "black",
   width: "100%",
-  height: "2rem"
+  height: "2rem",
 }));
 
-const TypographyInfo = styled(Typography)(() => ({
+const DeliveryTime = styled(Typography)(() => ({
   width: "100%",
   color: "gray",
   display: "flex",
@@ -92,24 +99,25 @@ const TypographyInfo = styled(Typography)(() => ({
 
 export function RestaurantCard(props: Restaurant) {
   return (
-    <StyledCard>
-      <StyledCardMedia image={props.image}>
+    <Container>
+      <RestaurantImage image={props.image}>
         <FavoriteButton onClick={() => ({})}>
-          {props.favorite ? <StyledFavFilledIcon /> : <StyledFavIcon />}
+          {props.favorite ? <FilledFavoriteIcon /> : <FavoriteIcon />}
         </FavoriteButton>
-      </StyledCardMedia>
-      <Link href={`/restaurant/${props.slug}`} passHref>
-        <BoxRestaurantInfo>
-          <StyledDivCardContent>
-            <TypographyTitle variant="h6">{props.name}</TypographyTitle>
-            <StyledDivRatio>{props.rating}
-            </StyledDivRatio>
-          </StyledDivCardContent>
-          <StyledDivCardContent>
-            <TypographyInfo variant="body1">{props.time}</TypographyInfo>
-          </StyledDivCardContent>
-        </BoxRestaurantInfo>
+      </RestaurantImage>
+      <Link href={`/restaurant/${props.slug}`} style={{ textDecoration: 'none' }} passHref>
+        <InfoBox>
+          <InfoContent>
+            <RestaurantName variant="h6">{props.name}</RestaurantName>
+            <RatingBadge>
+              <RatingText>{props.rating}</RatingText>
+            </RatingBadge>
+          </InfoContent>
+          <InfoContent>
+            <DeliveryTime variant="body1">{props.deliveryTime}</DeliveryTime>
+          </InfoContent>
+        </InfoBox>
       </Link>
-    </StyledCard >
+    </Container >
   );
 }
