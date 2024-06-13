@@ -1,4 +1,4 @@
-import { Menu } from "./restaurant/[slug]/menu";
+import { Menu } from "@/types/Menu";
 
 export function getRestaurants() {
   const restaurants = [
@@ -261,6 +261,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "1",
           },
           {
             name: "Chicken Taco",
@@ -269,6 +270,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "2",
           },
         ],
       },
@@ -282,6 +284,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "3",
           },
           {
             name: "Chicken Taco",
@@ -290,6 +293,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "4",
           },
         ],
       },
@@ -303,6 +307,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€4.50",
             rating: "90",
+            uuid: "5",
           },
           {
             name: "Carrot Cake",
@@ -311,6 +316,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "6",
           },
         ],
       },
@@ -324,6 +330,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
+            uuid: "7",
           },
           {
             name: "Fanta",
@@ -332,27 +339,7 @@ const menus: Menu[] = [
             info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
             price: "€8.50",
             rating: "3.4",
-          },
-        ],
-      },
-      {
-        name: "Drinks",
-        items: [
-          {
-            name: "Red Bull",
-            image:
-              "https://tb-static.uber.com/prod/image-proc/processed_images/a0ef1614fede6fa6bbb46f15b7ac4ab7/7f4ae9ca0446cbc23e71d8d395a98428.jpeg",
-            info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
-            price: "€8.50",
-            rating: "3.4",
-          },
-          {
-            name: "Fanta",
-            image:
-              "https://tb-static.uber.com/prod/image-proc/processed_images/28442ae42c4727eca70679c0f02ebab3/7f4ae9ca0446cbc23e71d8d395a98428.jpeg",
-            info: "Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.",
-            price: "€8.50",
-            rating: "3.4",
+            uuid: "8",
           },
         ],
       },
@@ -371,6 +358,7 @@ const menus: Menu[] = [
             info: "Delicious hand-made Liege waffle with Chocolate Topping",
             price: "€6.50",
             rating: "3.6",
+            uuid: "9",
           },
         ],
       },

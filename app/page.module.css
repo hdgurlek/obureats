@@ -5,16 +5,3 @@
   padding: 6rem;
   font-family: var(--font-mono);
 }
-
-.restaurant {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  width: 64%;
-  margin: auto;
-}
-
-.headerRestaurant {
-  margin: 20px 0px;
-}

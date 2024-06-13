@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { RestaurantCard } from './RestaurantCard';
-import { getRestaurants } from '../api';
+import { getRestaurants } from '@/src/api';
 
 const GridBox = styled(Box)(() => ({
     display: "flex",

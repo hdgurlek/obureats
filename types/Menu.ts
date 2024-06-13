@@ -4,6 +4,7 @@ export type MenuItem = {
   info: string;
   price: string;
   rating: string;
+  uuid: string;
 };
 
 export type MenuCategory = {

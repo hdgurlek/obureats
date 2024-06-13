@@ -8,9 +8,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Favorite, FavoriteBorderOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { Restaurant } from "./Restaurant";
+import { Restaurant } from "../types/Restaurant";
 import Link from 'next/link';
-import "../globals.css";
 
 const Container = styled(Card)(() => ({
   display: "flex",
