@@ -1,5 +1,10 @@
-import RestaurantPage from "@/components/RestaurantPage";
+import RestaurantPage from "@/components/restaurant/RestaurantPage";
 
-export default function Page({ params }: { params: { slug: string } }) {
-    return (<RestaurantPage params={params} />);
+interface PageProps {
+    params: { slug: string }
+    searchParams: { itemId: string }
+}
+
+export default function Page({ params, searchParams }: PageProps) {
+    return (<RestaurantPage slug={params.slug} itemId={searchParams.itemId} />);
 }
