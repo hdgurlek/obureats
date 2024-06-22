@@ -1,12 +1,10 @@
 'use client'
 
-import {getRestaurant, getRestaurantMenu} from '@/src/api'
-import {Menu} from '@/types/Menu'
-import {Restaurant} from '@/types/Restaurant'
+import useMenu from '@/api/hooks/useMenu'
+import useRestaurant from '@/api/hooks/useRestaurant'
 import {CardMedia, Typography, styled} from '@mui/material'
-import {useCallback, useEffect, useState} from 'react'
-import RestaurantMenu from './menu/RestaurantMenu'
 import MenuItemModal from './menu/MenuItemModal'
+import RestaurantMenu from './menu/RestaurantMenu'
 
 const HeaderImage = styled(CardMedia)(() => ({
 	display: 'flex',
@@ -30,41 +28,16 @@ const RestaurantHeader = styled(`div`)(() => ({
 	margin: '20px 0px',
 }))
 
-async function getMenu(slug: string) {
-	return getRestaurantMenu(slug)
-}
-
 interface RestaurantPageProps {
 	slug: string
 	itemId: string
 }
 
 export default function RestaurantPage({slug, itemId}: RestaurantPageProps) {
-	const [menu, setMenu] = useState<Menu | null>(null)
-	const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
+	const {data: restaurant, isLoading: isRestaurantLoading} = useRestaurant(slug)
+	const {data: menu, isLoading: isMenuLoading} = useMenu(slug)
 
-	const [loading, setLoading] = useState(true)
-
-	const fetchMenu = useCallback(async () => {
-		if (!slug) return
-
-		try {
-			const restaurant = await getRestaurant(slug)
-			const menu = await getMenu(slug)
-			setMenu(menu)
-			setRestaurant(restaurant)
-			setLoading(false)
-		} catch (error) {
-			console.error('Error fetching menu:', error)
-			setLoading(false)
-		}
-	}, [slug])
-
-	useEffect(() => {
-		fetchMenu()
-	}, [fetchMenu])
-
-	if (loading) return <div>Loading...</div>
+	if (isRestaurantLoading || isMenuLoading) return <div>Loading...</div>
 	if (!restaurant || !menu) return <div>Restaurant not found</div>
 
 	console.log('image : ' + restaurant.image)

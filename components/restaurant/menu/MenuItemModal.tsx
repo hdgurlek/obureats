@@ -1,6 +1,7 @@
 'use client'
 
-import {getMenuItem} from '@/src/api'
+import useMenuItem from '@/api/hooks/useMenuItem'
+import {getMenuItem} from '@/api/mockApi'
 import {MenuItem} from '@/types/Menu'
 import {Box, Modal, CardMedia, styled, Typography, Button} from '@mui/material'
 import {useRouter} from 'next/navigation'
@@ -55,25 +56,9 @@ interface MenuItemModalProps {
 
 export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
 	const router = useRouter()
-	const [item, setItem] = useState<MenuItem | undefined>(undefined)
-	const [loading, setLoading] = useState(true)
 
-	const fetchItem = useCallback(async () => {
-		try {
-			const item = await getMenuItem(slug, itemId)
-			setItem(item)
-			setLoading(false)
-		} catch (error) {
-			console.error('Error fetching item:', error)
-			setLoading(false)
-		}
-	}, [itemId, slug])
+	const {data: menuItem, isLoading: isMenuItemLoading} = useMenuItem(slug, itemId)
 
-	useEffect(() => {
-		fetchItem()
-	}, [fetchItem])
-
-	console.log(itemId)
 	return (
 		<Modal
 			open={true}
@@ -82,14 +67,14 @@ export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
 			}}
 		>
 			<Box sx={style}>
-				{loading && <div>Loading...</div>}
-				{!loading && !item && <div>Item not found</div>}
-				{!loading && item && (
+				{isMenuItemLoading && <div>Loading...</div>}
+				{!isMenuItemLoading && !menuItem && <div>Item not found</div>}
+				{!isMenuItemLoading && menuItem && (
 					<>
-						<ItemImage image={item.image} />
+						<ItemImage image={menuItem.image} />
 						<Box sx={style1}>
-							<Typography variant="h4">{item.name}</Typography>
-							<PriceText variant="h5">{item.price}</PriceText>
+							<Typography variant="h4">{menuItem.name}</Typography>
+							<PriceText variant="h5">{menuItem.price}</PriceText>
 							<Typography>Details</Typography>
 							<AddButton variant="contained">Add 1 to Order</AddButton>
 						</Box>
