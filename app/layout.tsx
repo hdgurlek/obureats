@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
 import ReactQueryProvider from './ReactQueryProvider'
-import Header from '@/components/Header'
+import Header from '@/components/header/Header'
 
 const inter = Inter({subsets: ['latin']})
 
@@ -13,10 +13,12 @@ export const metadata: Metadata = {
 export default function RootLayout(props: {children: React.ReactNode}) {
 	return (
 		<html lang="en">
-			<body className={inter.className} style={{margin: 0}}>
-				<Header />
-				<ReactQueryProvider>{props.children}</ReactQueryProvider>
-			</body>
+			<ReactQueryProvider>
+				<body className={inter.className} style={{margin: 0}}>
+					<Header />
+					{props.children}
+				</body>
+			</ReactQueryProvider>
 		</html>
 	)
 }

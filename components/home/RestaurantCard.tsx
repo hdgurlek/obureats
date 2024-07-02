@@ -98,12 +98,17 @@ const DeliveryTime = styled(Typography)(() => ({
 export function RestaurantCard(props: Restaurant) {
 	return (
 		<Container>
-			<RestaurantImage image={props.image}>
-				<FavoriteButton onClick={() => ({})}>
-					{props.favorite ? <FilledFavoriteIcon /> : <FavoriteIcon />}
-				</FavoriteButton>
-			</RestaurantImage>
 			<Link href={`/restaurant/${props.slug}`} style={{textDecoration: 'none'}} passHref>
+				<RestaurantImage image={props.image}>
+					<FavoriteButton
+						aria-label="favorite"
+						onClick={e => {
+							e.preventDefault()
+						}}
+					>
+						{props.favorite ? <FilledFavoriteIcon /> : <FavoriteIcon />}
+					</FavoriteButton>
+				</RestaurantImage>
 				<InfoBox>
 					<InfoContent>
 						<RestaurantName variant="h6">{props.name}</RestaurantName>

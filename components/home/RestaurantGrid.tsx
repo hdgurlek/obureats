@@ -1,11 +1,10 @@
 'use client'
-import * as React from 'react'
-import {styled} from '@mui/material/styles'
+import useRestaurantList from '@/api/hooks/useRestaurantList'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import {createTheme, styled} from '@mui/material/styles'
 import {RestaurantCard} from './RestaurantCard'
-import {getRestaurants} from '@/api/mockApi'
-import useRestaurantList from '@/api/hooks/useRestaurantList'
+import {ThemeProvider} from 'styled-components'
 
 const GridBox = styled(Box)(() => ({
 	display: 'flex',

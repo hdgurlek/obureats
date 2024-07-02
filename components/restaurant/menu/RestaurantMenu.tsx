@@ -22,7 +22,7 @@ export default function RestaurantMenu({menu, restaurantSlug}: MenuProps) {
 		<div>
 			{menu.categories.map((category, i) => (
 				<div key={i}>
-					<Typography fontWeight={600} variant="h6">
+					<Typography fontWeight={600} variant="h5">
 						{category.name}
 					</Typography>
 					<MenuCategoryGrid>

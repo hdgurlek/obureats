@@ -1,4 +1,6 @@
+import {Cart} from '@/types/Cart'
 import {Menu} from '@/types/Menu'
+import {useMemo} from 'react'
 
 export function getRestaurants() {
 	const restaurants = [
@@ -258,8 +260,9 @@ const menus: Menu[] = [
 						name: 'Beef Taco',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/a0ef1614fede6fa6bbb46f15b7ac4ab7/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '1',
 					},
@@ -267,8 +270,9 @@ const menus: Menu[] = [
 						name: 'Chicken Taco',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/28442ae42c4727eca70679c0f02ebab3/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '2',
 					},
@@ -281,8 +285,9 @@ const menus: Menu[] = [
 						name: 'Beef Taco',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/a0ef1614fede6fa6bbb46f15b7ac4ab7/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese. Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '3',
 					},
@@ -290,8 +295,9 @@ const menus: Menu[] = [
 						name: 'Chicken Taco',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/28442ae42c4727eca70679c0f02ebab3/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '4',
 					},
@@ -304,8 +310,9 @@ const menus: Menu[] = [
 						name: 'Brownie',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/a0ef1614fede6fa6bbb46f15b7ac4ab7/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€4.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '4.50',
 						rating: '90',
 						uuid: '5',
 					},
@@ -313,8 +320,9 @@ const menus: Menu[] = [
 						name: 'Carrot Cake',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/28442ae42c4727eca70679c0f02ebab3/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '6',
 					},
@@ -327,8 +335,9 @@ const menus: Menu[] = [
 						name: 'Red Bull',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/a0ef1614fede6fa6bbb46f15b7ac4ab7/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '7',
 					},
@@ -336,8 +345,9 @@ const menus: Menu[] = [
 						name: 'Fanta',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/28442ae42c4727eca70679c0f02ebab3/7f4ae9ca0446cbc23e71d8d395a98428.jpeg',
-						info: 'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
-						price: '€8.50',
+						detail:
+							'Three big soft shell slow cooked pulled beef Taco with pickeld red onions, cilantro and Mexican cheese.',
+						price: '8.50',
 						rating: '3.4',
 						uuid: '8',
 					},
@@ -355,8 +365,8 @@ const menus: Menu[] = [
 						name: 'Waffle',
 						image:
 							'https://tb-static.uber.com/prod/image-proc/processed_images/5870694b1a03920b422c512eff1f85c0/f0d1762b91fd823a1aa9bd0dab5c648d.jpeg',
-						info: 'Delicious hand-made Liege waffle with Chocolate Topping',
-						price: '€6.50',
+						detail: 'Delicious hand-made Liege waffle with Chocolate Topping',
+						price: '6.50',
 						rating: '3.6',
 						uuid: '9',
 					},
@@ -367,20 +377,71 @@ const menus: Menu[] = [
 ]
 
 export async function getRestaurant(slug: string) {
+	console.log(slug)
+
 	const restaurants = await getRestaurants()
 	return restaurants.find(restaurant => restaurant.slug === slug) || null
 }
 
 export async function getRestaurantMenu(slug: string) {
 	//Fake Network Behaviour
-	await new Promise(resolve => setTimeout(resolve, 2000))
+	await new Promise(resolve => setTimeout(resolve, 500))
 	return (await menus.find(restaurant => restaurant.slug === slug)) || null
 }
 
 export async function getMenuItem(slug: string, itemId: string) {
 	//Fake Network Behaviour
-	await new Promise(resolve => setTimeout(resolve, 2000))
+	await new Promise(resolve => setTimeout(resolve, 500))
 	const menu = menus.find(restaurant => restaurant.slug === slug)
 	const items = menu?.categories.flatMap(category => category.items)
 	return items?.find(item => item.uuid === itemId)
+}
+
+var cart: Cart = {
+	restaurantSlug: '',
+	items: [],
+	totalPrice: undefined,
+}
+
+export async function addItemToCart(restaurantSlug: string, itemUuid: string, quantity: number) {
+	await new Promise(resolve => setTimeout(resolve, 100))
+
+	if (quantity === 0) {
+		console.log('REMOVING ITEM')
+		const removedList = cart?.items.filter(i => i.uuid !== itemUuid)
+		cart = {restaurantSlug, items: [...removedList], totalPrice: 30}
+		return
+	}
+
+	const itemInCart = cart.items.find(i => i.uuid === itemUuid)
+
+	if (itemInCart) {
+		const items = cart.items.map(item => {
+			if (item.uuid !== itemUuid) return item
+			return {...item, quantity: item.quantity + quantity}
+		})
+
+		cart = {
+			restaurantSlug,
+			items,
+			totalPrice: 30,
+		}
+		console.log('quantity updated')
+	} else {
+		cart = {
+			restaurantSlug,
+			items: [...cart.items, {name: 'item', price: 10, quantity: 1, uuid: itemUuid}],
+			totalPrice: 30,
+		}
+		console.log('item added to cart')
+	}
+
+	console.log(cart)
+}
+
+export async function getCart() {
+	console.log('getCart called')
+	console.log(cart)
+	await new Promise(resolve => setTimeout(resolve, 500))
+	return cart
 }

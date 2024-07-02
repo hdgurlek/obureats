@@ -1,52 +1,92 @@
 'use client'
 
+import useAddItemToCart from '@/api/hooks/useAddItemToCart'
 import useMenuItem from '@/api/hooks/useMenuItem'
-import {getMenuItem} from '@/api/mockApi'
-import {MenuItem} from '@/types/Menu'
-import {Box, Modal, CardMedia, styled, Typography, Button} from '@mui/material'
+import {
+	Box,
+	Button,
+	CardMedia,
+	IconButton,
+	MenuItem,
+	Modal,
+	Select,
+	SelectChangeEvent,
+	Stack,
+	Typography,
+	styled,
+} from '@mui/material'
 import {useRouter} from 'next/navigation'
-import {useCallback, useEffect, useState} from 'react'
+import CloseIcon from '@mui/icons-material/Close'
+import {useMemo, useState} from 'react'
 
-const style = {
+const CloseButton = styled(IconButton)(() => ({
+	position: 'absolute',
+	top: 4,
+	right: 4,
+	padding: '8px',
+	color: '#FFF',
+}))
+
+const ModalBox = styled(Box)(() => ({
 	display: 'flex',
 	flexDirection: 'row',
-	alignItems: 'center',
 	position: 'absolute' as 'absolute',
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
 	width: 968,
-	height: 644,
-	bgcolor: 'background.paper',
-	boxShadow: 24,
+	height: 500,
+	backgroundColor: '#fff',
+	boxShadow: '24',
 	borderRadius: '1rem',
-	p: 4,
-	gap: 2,
-}
+	gap: '2rem',
+	padding: '2rem',
+}))
 
-const style1 = {
+const InfoBox = styled(Box)(() => ({
 	display: 'flex',
 	flexDirection: 'column',
 	width: '100%',
-	height: 600,
 	bgcolor: 'background.paper',
-	p: 0,
-}
+	padding: '0rem',
+}))
+
+const ItemName = styled(Typography)(() => ({
+	fontWeight: '600',
+}))
 
 const ItemImage = styled(CardMedia)(() => ({
 	component: 'img',
 	alt: 'item-img',
-	height: 600,
+	height: 492,
 	width: '100%',
 }))
 
 const PriceText = styled(Typography)(() => ({
 	color: 'gray',
+	fontWeight: '600',
+}))
+
+const AddBox = styled(Box)(() => ({
+	display: 'flex',
+	height: '3rem',
+	justifyContent: 'center',
+	alignItems: 'center',
+	gap: '0.5rem',
+	marginTop: '1.5rem',
 }))
 
 const AddButton = styled(Button)(() => ({
+	height: '3rem',
+	width: '100%',
 	backgroundColor: '#000',
-	alignSelf: 'end',
+	fontWeight: 600,
+	'&:hover': {
+		backgroundColor: '#262626',
+	},
+	margin: '1.5rem 0',
+	textTransform: 'none',
+	fontSize: '1.1rem',
 }))
 
 interface MenuItemModalProps {
@@ -57,7 +97,23 @@ interface MenuItemModalProps {
 export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
 	const router = useRouter()
 
+	const [quantity, setQuantity] = useState(1)
 	const {data: menuItem, isLoading: isMenuItemLoading} = useMenuItem(slug, itemId)
+	const {mutate: addItemToCart} = useAddItemToCart(slug, itemId, quantity)
+
+	const handleChanges = (event: SelectChangeEvent) => {
+		setQuantity(parseInt(event.target.value))
+	}
+
+	const quantities = useMemo(() => {
+		const quantities = []
+
+		for (let i = 1; i <= 10; i++) {
+			quantities.push(<MenuItem value={i}>{i}</MenuItem>)
+		}
+
+		return quantities
+	}, [])
 
 	return (
 		<Modal
@@ -66,21 +122,38 @@ export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
 				router.back()
 			}}
 		>
-			<Box sx={style}>
+			<ModalBox>
+				{
+					<CloseButton>
+						<CloseIcon></CloseIcon>
+					</CloseButton>
+				}
 				{isMenuItemLoading && <div>Loading...</div>}
 				{!isMenuItemLoading && !menuItem && <div>Item not found</div>}
 				{!isMenuItemLoading && menuItem && (
 					<>
 						<ItemImage image={menuItem.image} />
-						<Box sx={style1}>
-							<Typography variant="h4">{menuItem.name}</Typography>
-							<PriceText variant="h5">{menuItem.price}</PriceText>
-							<Typography>Details</Typography>
-							<AddButton variant="contained">Add 1 to Order</AddButton>
-						</Box>
+						<InfoBox>
+							<ItemName variant="h4" gutterBottom>
+								{menuItem.name}
+							</ItemName>
+							<PriceText variant="h5" gutterBottom>
+								{menuItem.price}
+							</PriceText>
+							<Typography gutterBottom>{menuItem.detail}</Typography>
+							<AddBox>
+								<Select sx={{height: '3rem'}} value={quantity.toString()} onChange={handleChanges}>
+									{quantities}
+								</Select>
+								<AddButton variant="contained" onClick={() => addItemToCart()}>
+									{/* handle total price with a better method */}
+									Add {quantity} to Order - € {parseFloat(menuItem.price) * quantity}
+								</AddButton>
+							</AddBox>
+						</InfoBox>
 					</>
 				)}
-			</Box>
+			</ModalBox>
 		</Modal>
 	)
 }

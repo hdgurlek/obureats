@@ -1,11 +1,14 @@
 'use client'
-import Card from '@mui/material/Card'
-import {styled} from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import {IconButton, CardMedia} from '@mui/material'
-import Add from '@mui/icons-material/Add'
-import Link from 'next/link'
+import useAddItemToCart from '@/api/hooks/useAddItemToCart'
+import useCart from '@/api/hooks/useCart'
 import {MenuItem} from '@/types/Menu'
+import Add from '@mui/icons-material/Add'
+import {CardMedia, IconButton} from '@mui/material'
+import Card from '@mui/material/Card'
+import Typography from '@mui/material/Typography'
+import {styled} from '@mui/material/styles'
+import Link from 'next/link'
+import {useMemo} from 'react'
 
 const Container = styled(Card)(() => ({
 	display: 'flex',
@@ -33,7 +36,8 @@ const Info = styled('div')(() => ({
 	flexDirection: 'column',
 	justifyContent: 'flex-start',
 	width: '100%',
-	padding: '1rem',
+	padding: '1.1rem',
+	rowGap: '0.1rem',
 }))
 
 const Name = styled(Typography)(() => ({
@@ -41,26 +45,28 @@ const Name = styled(Typography)(() => ({
 	width: '100%',
 	alignItems: 'center',
 	fontWeight: 600,
-}))
-
-const Details = styled(Typography)(() => ({
-	display: 'flex',
-	width: '100%',
-	alignContent: 'center',
-	justifyContent: 'center',
-	alignItems: 'center',
-	color: 'rgba(121,121,121)',
-	fontSize: '0.96rem',
+	fontSize: '18px',
 }))
 
 const Price = styled(Typography)(() => ({
 	width: '100%',
 	display: 'flex',
 	alignContent: 'flex-start',
-	fontWeight: 600,
 }))
 
-const AddItem = styled(IconButton)(() => ({
+const Details = styled(Typography)(() => ({
+	display: 'flex',
+	width: '90%',
+	height: '2.5rem',
+	alignContent: 'center',
+	justifyContent: 'center',
+	alignItems: 'start',
+	color: 'rgba(121,121,121)',
+	fontSize: '16px',
+	overflow: 'clip',
+}))
+
+const AddItemButton = styled(IconButton)(() => ({
 	width: 38,
 	height: 38,
 	backgroundColor: '#fff',
@@ -82,29 +88,38 @@ interface MenuItemCardProps {
 }
 
 export function MenuItemCard({item, restaurantSlug}: MenuItemCardProps) {
+	const {data: cart} = useCart()
+	const {mutate: addItemToCart} = useAddItemToCart(restaurantSlug, item.uuid, 1)
+	const quantity = useMemo(() => {
+		const itemInCart = cart?.items.find(i => i.uuid === item.uuid)
+		return itemInCart?.quantity
+	}, [cart?.items, item.uuid])
+
 	return (
-		<div>
+		<Link
+			key={item.uuid}
+			href={`/restaurant/${restaurantSlug}/?itemId=${item.uuid}`}
+			style={{textDecoration: 'none'}}
+			passHref
+		>
 			<Container>
 				<Info>
-					<Name variant="h6">{item.name}</Name>
-					<Price variant="subtitle1">{item.price}</Price>
-					<Details>{item.info}</Details>
+					<Name>{item.name}</Name>
+					<Price variant="body1">€{item.price}</Price>
+					<Details variant="inherit">{item.detail}</Details>
 				</Info>
 				<ItemImage image={item.image}>
-					{
-						<Link
-							key={item.uuid}
-							href={`/restaurant/${restaurantSlug}/?itemId=${item.uuid}`}
-							style={{textDecoration: 'none'}}
-							passHref
-						>
-							<AddItem>
-								<Add />
-							</AddItem>
-						</Link>
-					}
+					<AddItemButton
+						onClick={e => {
+							addItemToCart()
+							e.preventDefault()
+						}}
+					>
+						{quantity && quantity > 0 && <Typography>{quantity}</Typography>}
+						{(!quantity || quantity === 0) && <Add />}
+					</AddItemButton>
 				</ItemImage>
 			</Container>
-		</div>
+		</Link>
 	)
 }
