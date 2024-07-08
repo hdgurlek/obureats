@@ -1,6 +1,5 @@
 import {Cart} from '@/types/Cart'
 import {Menu} from '@/types/Menu'
-import {useMemo} from 'react'
 
 export function getRestaurants() {
 	const restaurants = [
@@ -377,8 +376,6 @@ const menus: Menu[] = [
 ]
 
 export async function getRestaurant(slug: string) {
-	console.log(slug)
-
 	const restaurants = await getRestaurants()
 	return restaurants.find(restaurant => restaurant.slug === slug) || null
 }
@@ -407,7 +404,6 @@ export async function addItemToCart(restaurantSlug: string, itemUuid: string, qu
 	await new Promise(resolve => setTimeout(resolve, 100))
 
 	if (quantity === 0) {
-		console.log('REMOVING ITEM')
 		const removedList = cart?.items.filter(i => i.uuid !== itemUuid)
 		cart = {restaurantSlug, items: [...removedList], totalPrice: 30}
 		return
@@ -430,7 +426,7 @@ export async function addItemToCart(restaurantSlug: string, itemUuid: string, qu
 	} else {
 		cart = {
 			restaurantSlug,
-			items: [...cart.items, {name: 'item', price: 10, quantity: 1, uuid: itemUuid}],
+			items: [...cart.items, {name: 'item', price: 10, quantity: quantity, uuid: itemUuid}],
 			totalPrice: 30,
 		}
 		console.log('item added to cart')
@@ -440,8 +436,6 @@ export async function addItemToCart(restaurantSlug: string, itemUuid: string, qu
 }
 
 export async function getCart() {
-	console.log('getCart called')
-	console.log(cart)
 	await new Promise(resolve => setTimeout(resolve, 500))
 	return cart
 }

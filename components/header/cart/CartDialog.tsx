@@ -2,10 +2,9 @@
 
 import useCart from '@/api/hooks/useCart'
 import useRestaurant from '@/api/hooks/useRestaurant'
+import CloseIcon from '@mui/icons-material/Close'
 import {Box, Button, IconButton, Paper, ThemeProvider, Typography, createTheme, styled} from '@mui/material'
 import CartItemRow from './CartItemRow'
-import CloseIcon from '@mui/icons-material/Close'
-import {useState} from 'react'
 
 const CloseButton = styled(IconButton)(() => ({
 	position: 'absolute',
