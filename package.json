@@ -1,32 +1,23 @@
 {
   "name": "store-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "repository": "https://github.com/hdgurlek/obureats.git",
+  "author": "Dilara Gurlek <haticedilaragurlek@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "client": "yarn workspace @store-app/client start",
+    "client:dev": "yarn workspace @store-app/client dev",
+    "server": "yarn workspace @store-app/server start",
+    "build-client": "yarn workspace @store-app/client build",
+    "build-server": "yarn workspace @store-app/server build",
+    "start": "concurrently --kill-others-on-fail \"yarn client\"  \"yarn server\"",
+    "dev": "concurrently --kill-others-on-fail \"yarn client:dev\"  \"yarn server\""
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.15",
-    "@mui/material": "^5.15.15",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-    "@tanstack/react-query": "^5.45.1",
-    "next": "14.2.1",
-    "react": "^18",
-    "react-dom": "^18",
-    "styled-components": "^6.1.8"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@typescript-eslint/parser": "^5.0.1",
-    "eslint": "^8.52.0",
-    "eslint-config-next": "14.2.1",
-    "typescript": "^5"
+    "concurrently": "^8.2.2"
   }
 }
