@@ -7,7 +7,6 @@ const MenuCategoryGrid = styled(Grid)(() => ({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: '1rem',
-	justifyContent: 'center',
 	alignItems: 'center',
 	margin: '1rem 0',
 }))
@@ -21,13 +20,13 @@ export default function RestaurantMenu({menu, restaurantSlug}: MenuProps) {
 	return (
 		<div>
 			{menu.categories.map((category, i) => (
-				<div key={i}>
-					<Typography fontWeight={600} variant="h5">
+				<div key={i} style={{paddingBottom: '1.5rem'}}>
+					<Typography fontWeight={500} variant="h5">
 						{category.name}
 					</Typography>
 					<MenuCategoryGrid>
-						{category.items.map((item, i) => (
-							<MenuItemCard key={i} item={item} restaurantSlug={restaurantSlug} />
+						{category.items.map(item => (
+							<MenuItemCard key={item.uuid} item={item} restaurantSlug={restaurantSlug} />
 						))}
 					</MenuCategoryGrid>
 				</div>

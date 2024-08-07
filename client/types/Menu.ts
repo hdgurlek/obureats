@@ -2,8 +2,8 @@ export type MenuItem = {
 	name: string
 	image: string
 	detail: string
-	price: string
-	rating: string
+	price: number
+	rating: number
 	uuid: string
 }
 
@@ -13,6 +13,5 @@ export type MenuCategory = {
 }
 
 export type Menu = {
-	slug: string
 	categories: MenuCategory[]
 }

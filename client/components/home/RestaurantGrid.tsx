@@ -2,9 +2,8 @@
 import useRestaurantList from '@/api/hooks/useRestaurantList'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import {createTheme, styled} from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 import {RestaurantCard} from './RestaurantCard'
-import {ThemeProvider} from 'styled-components'
 
 const GridBox = styled(Box)(() => ({
 	display: 'flex',
@@ -28,8 +27,7 @@ export default function RestaurantGrid() {
 			<GridContainer container>
 				{restaurantList?.map(item => (
 					<RestaurantCard
-						id={item.id}
-						key={item.id}
+						key={item.slug}
 						name={item.name}
 						slug={item.slug}
 						rating={item.rating}

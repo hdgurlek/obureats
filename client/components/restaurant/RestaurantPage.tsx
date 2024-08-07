@@ -2,7 +2,7 @@
 
 import useMenu from '@/api/hooks/useMenu'
 import useRestaurant from '@/api/hooks/useRestaurant'
-import {CardMedia, ThemeProvider, Typography, createTheme, styled} from '@mui/material'
+import {CardMedia, Typography, styled} from '@mui/material'
 import MenuItemModal from './menu/MenuItemModal'
 import RestaurantMenu from './menu/RestaurantMenu'
 
@@ -20,20 +20,14 @@ const RestaurantContainer = styled(`div`)(() => ({
 	flexDirection: 'column',
 	alignContent: 'center',
 	justifyContent: 'center',
-	width: '64%',
+	width: '80%',
 	margin: 'auto',
 }))
 
 const RestaurantHeader = styled(`div`)(() => ({
 	margin: '20px 0px',
+	paddingBottom: '1rem',
 }))
-
-const theme = createTheme({
-	typography: {
-		fontSize: 14,
-		fontFamily: 'inherit',
-	},
-})
 
 interface RestaurantPageProps {
 	slug: string
@@ -48,17 +42,17 @@ export default function RestaurantPage({slug, itemId}: RestaurantPageProps) {
 	if (!restaurant || !menu) return <div>Restaurant not found</div>
 
 	return (
-		<ThemeProvider theme={theme}>
+		<>
 			{itemId && <MenuItemModal slug={slug} itemId={itemId} />}
 			<RestaurantContainer>
 				<HeaderImage image={restaurant.image} />
 				<RestaurantHeader>
-					<Typography fontWeight={600} variant="h4">
+					<Typography fontWeight={500} variant="h4">
 						{restaurant.name}
 					</Typography>
 				</RestaurantHeader>
 				<RestaurantMenu menu={menu} restaurantSlug={slug} />
 			</RestaurantContainer>
-		</ThemeProvider>
+		</>
 	)
 }

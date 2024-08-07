@@ -1,11 +1,11 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
-import {addItemToCart} from '../mockApi'
+import {addItemToCart} from '../api'
 
-const useAddItemToCart = (restaurantSlug: string, uuid: string, quantity: number) => {
+const useAddItemToCart = (itemUuid: string, quantity: number) => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: () => addItemToCart(restaurantSlug, uuid, quantity),
+		mutationFn: () => addItemToCart(itemUuid, quantity),
 		mutationKey: ['add-to-cart'],
 		onSuccess: () => {
 			console.log('invalidate')

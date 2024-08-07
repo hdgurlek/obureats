@@ -7,5 +7,5 @@ export type CartItem = {
 	name: string
 	quantity: number
 	price: number
-	uuid: string
+	itemUuid: string
 }

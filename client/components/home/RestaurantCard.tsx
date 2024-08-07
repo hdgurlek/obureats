@@ -14,7 +14,7 @@ import Link from 'next/link'
 const Container = styled(Card)(() => ({
 	display: 'flex',
 	flexDirection: 'column',
-	width: 288,
+	width: 390,
 	height: 230,
 	overflow: 'visible',
 	transition: '0.4s',
@@ -53,10 +53,8 @@ const RatingBadge = styled('div')(() => ({
 	display: 'flex',
 	alignContent: 'center',
 	justifyContent: 'center',
-	width: '1.8rem',
-	height: '1.8rem',
-	fontWeight: '600',
-	fontSize: '13px',
+	width: '1.4rem',
+	height: '1.4rem',
 	borderRadius: '50%',
 	padding: '0.2rem 0.2rem',
 	backgroundColor: '#d5d5d5',
@@ -64,6 +62,8 @@ const RatingBadge = styled('div')(() => ({
 
 const RatingText = styled(Typography)(() => ({
 	display: 'flex',
+	fontSize: 12,
+	color: 'black',
 	alignItems: 'center',
 	padding: '0.4rem 0.4rem',
 }))

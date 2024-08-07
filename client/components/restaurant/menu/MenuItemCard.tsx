@@ -14,7 +14,7 @@ const Container = styled(Card)(() => ({
 	display: 'flex',
 	flexDirection: 'row',
 	height: 145,
-	maxWidth: 660,
+	maxWidth: 586,
 	transition: '0.4s',
 	boxShadow: 'none',
 	border: '0.1rem solid #eaeaea',
@@ -44,7 +44,6 @@ const Name = styled(Typography)(() => ({
 	display: 'flex',
 	width: '100%',
 	alignItems: 'center',
-	fontWeight: 600,
 	fontSize: '18px',
 }))
 
@@ -61,9 +60,11 @@ const Details = styled(Typography)(() => ({
 	alignContent: 'center',
 	justifyContent: 'center',
 	alignItems: 'start',
-	color: 'rgba(121,121,121)',
-	fontSize: '16px',
+	color: 'rgba(153,153,153)',
+	fontSize: '14px',
 	overflow: 'clip',
+	fontFamily: 'sans-serif',
+	lineHeight: 1.5,
 }))
 
 const AddItemButton = styled(IconButton)(() => ({
@@ -89,9 +90,9 @@ interface MenuItemCardProps {
 
 export function MenuItemCard({item, restaurantSlug}: MenuItemCardProps) {
 	const {data: cart} = useCart()
-	const {mutate: addItemToCart} = useAddItemToCart(restaurantSlug, item.uuid, 1)
+	const {mutate: addItemToCart} = useAddItemToCart(item.uuid, 1)
 	const quantity = useMemo(() => {
-		const itemInCart = cart?.items.find(i => i.uuid === item.uuid)
+		const itemInCart = cart?.items.find(i => i.itemUuid === item.uuid)
 		return itemInCart?.quantity
 	}, [cart?.items, item.uuid])
 

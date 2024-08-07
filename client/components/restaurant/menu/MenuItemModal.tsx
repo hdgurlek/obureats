@@ -2,6 +2,7 @@
 
 import useAddItemToCart from '@/api/hooks/useAddItemToCart'
 import useMenuItem from '@/api/hooks/useMenuItem'
+import CloseIcon from '@mui/icons-material/Close'
 import {
 	Box,
 	Button,
@@ -11,12 +12,10 @@ import {
 	Modal,
 	Select,
 	SelectChangeEvent,
-	Stack,
 	Typography,
 	styled,
 } from '@mui/material'
 import {useRouter} from 'next/navigation'
-import CloseIcon from '@mui/icons-material/Close'
 import {useMemo, useState} from 'react'
 
 const CloseButton = styled(IconButton)(() => ({
@@ -51,9 +50,7 @@ const InfoBox = styled(Box)(() => ({
 	padding: '0rem',
 }))
 
-const ItemName = styled(Typography)(() => ({
-	fontWeight: '600',
-}))
+const ItemName = styled(Typography)(() => ({}))
 
 const ItemImage = styled(CardMedia)(() => ({
 	component: 'img',
@@ -64,7 +61,6 @@ const ItemImage = styled(CardMedia)(() => ({
 
 const PriceText = styled(Typography)(() => ({
 	color: 'gray',
-	fontWeight: '600',
 }))
 
 const AddBox = styled(Box)(() => ({
@@ -80,7 +76,7 @@ const AddButton = styled(Button)(() => ({
 	height: '3rem',
 	width: '100%',
 	backgroundColor: '#000',
-	fontWeight: 600,
+	fontWeight: 500,
 	'&:hover': {
 		backgroundColor: '#262626',
 	},
@@ -94,12 +90,12 @@ interface MenuItemModalProps {
 	itemId: string
 }
 
-export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
+export default function MenuItemModal({slug, itemId: itemUuid}: MenuItemModalProps) {
 	const router = useRouter()
 
 	const [quantity, setQuantity] = useState(1)
-	const {data: menuItem, isLoading: isMenuItemLoading} = useMenuItem(slug, itemId)
-	const {mutate: addItemToCart} = useAddItemToCart(slug, itemId, quantity)
+	const {data: menuItem, isLoading: isMenuItemLoading} = useMenuItem(slug, itemUuid)
+	const {mutate: addItemToCart} = useAddItemToCart(itemUuid, quantity)
 
 	const handleChanges = (event: SelectChangeEvent) => {
 		setQuantity(parseInt(event.target.value))
@@ -138,16 +134,17 @@ export default function MenuItemModal({slug, itemId}: MenuItemModalProps) {
 								{menuItem.name}
 							</ItemName>
 							<PriceText variant="h5" gutterBottom>
-								{menuItem.price}
+								{`€${menuItem.price}`}
 							</PriceText>
-							<Typography gutterBottom>{menuItem.detail}</Typography>
+							<Typography gutterBottom style={{color: 'rgb(76, 76, 76)'}}>
+								{menuItem.detail}
+							</Typography>
 							<AddBox>
 								<Select sx={{height: '3rem'}} value={quantity.toString()} onChange={handleChanges}>
 									{quantities}
 								</Select>
 								<AddButton variant="contained" onClick={() => addItemToCart()}>
-									{/* handle total price with a better method */}
-									Add {quantity} to Order - € {parseFloat(menuItem.price) * quantity}
+									Add {quantity} to Order - € {menuItem.price * quantity}
 								</AddButton>
 							</AddBox>
 						</InfoBox>
