@@ -1,34 +1,26 @@
 import {Cart} from '../api/types/response/Cart'
 import CartItems from '../models/CartItems'
 import Carts from '../models/Carts'
-import Items from '../models/Items'
+import Items, {ItemModel} from '../models/Items'
 
 export async function getCart(userId: string) {
 	const cartModel = await Carts.findOne({userId: userId}).exec()
 	if (!cartModel) {
 		throw new Error('Cart not found')
 	}
-	const cartItemModels = await CartItems.find({cart: cartModel._id}).exec()
+	const cartItemModels = await CartItems.find({cart: cartModel._id}).populate<{item: ItemModel}>({path: 'item'}).exec()
 	let totalPrice: number = 0
 
-	const cartItems = await Promise.all(
-		cartItemModels.map(async cartItemModel => {
-			const itemModel = await Items.findOne({_id: cartItemModel.item._id}).exec()
-
-			if (!itemModel) {
-				throw new Error('Item not found')
-			}
-
-			const item = {
-				name: itemModel.name,
-				quantity: cartItemModel.quantity,
-				price: itemModel.price,
-				itemUuid: itemModel.uuid,
-			}
-			totalPrice += item.quantity * item.price
-			return item
-		})
-	)
+	const cartItems = cartItemModels.map(cartItemModel => {
+		const item = {
+			name: cartItemModel.item.name,
+			quantity: cartItemModel.quantity,
+			price: cartItemModel.item.price,
+			itemUuid: cartItemModel.item.uuid,
+		}
+		totalPrice += item.quantity * item.price
+		return item
+	})
 
 	return {restaurantSlug: cartModel.restaurantSlug, items: cartItems, totalPrice: totalPrice} as Cart
 }
