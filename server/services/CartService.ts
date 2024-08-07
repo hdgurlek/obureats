@@ -34,9 +34,11 @@ export async function addItemToCart(itemUuid: string, quantity: number, userId: 
 	let cart = await Carts.findOne({userId: userId}).exec()
 	const restaurantSlug = item.restaurantSlug
 
-	// TODO remove previous cart if one exists with a different slug
-	if (!cart) {
-		cart = await Carts.create({userId: userId, restaurantSlug: restaurantSlug})
+	if (!cart || cart.restaurantSlug !== restaurantSlug) {
+		if (cart) {
+			await Carts.deleteOne({userId}).exec()
+		}
+		cart = await Carts.create({userId, restaurantSlug})
 	}
 
 	let cartItem = await CartItems.findOne({cart: cart._id, item: item._id})
