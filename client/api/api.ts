@@ -69,3 +69,16 @@ export async function addItemToCart(itemUuid: string, quantity: number) {
 		}),
 	})
 }
+
+export async function updateItemInCart(itemUuid: string, quantity: number) {
+	await fetch(`http://localhost:3001/carts/items/update`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			itemUuid,
+			quantity,
+		}),
+	})
+}

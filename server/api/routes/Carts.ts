@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {addItemToCart, getCart} from '../../services/CartService'
+import {addItemToCart, getCart, updateItemInCart} from '../../services/CartService'
 const route = Router()
 
 const carts = (app: Router) => {
@@ -14,6 +14,12 @@ const carts = (app: Router) => {
 	route.post('/items/add', async (req, res) => {
 		const {itemUuid, quantity} = req.body
 		await addItemToCart(itemUuid, quantity, userId)
+		res.sendStatus(200)
+	})
+
+	route.post('/items/update', async (req, res) => {
+		const {itemUuid, quantity} = req.body
+		await updateItemInCart(itemUuid, quantity, userId)
 		res.sendStatus(200)
 	})
 }
