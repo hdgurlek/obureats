@@ -1,7 +1,7 @@
 import mongoose, {Schema, model} from 'mongoose'
 import VerificationCodeType from '../constants/verificationCodeTypes'
 
-export interface VerificationCodeModel extends Document {
+export interface VerificationCodeModel extends mongoose.Document {
 	userId: mongoose.Types.ObjectId
 	type: VerificationCodeType
 	createdAt: Date

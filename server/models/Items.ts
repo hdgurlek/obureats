@@ -1,6 +1,6 @@
-import {Schema, model} from 'mongoose'
+import mongoose, {Schema, model} from 'mongoose'
 
-export interface ItemModel extends Document {
+export interface ItemModel extends mongoose.Document {
 	name: string
 	sequence: number
 	image: string

@@ -1,6 +1,6 @@
-import {Schema, Types, model} from 'mongoose'
+import mongoose, {Schema, Types, model} from 'mongoose'
 
-export interface CartItemModel extends Document {
+export interface CartItemModel extends mongoose.Document {
 	quantity: number
 	cart: Types.ObjectId
 	item: Types.ObjectId

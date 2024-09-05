@@ -1,6 +1,6 @@
-import {Schema, model} from 'mongoose'
+import mongoose, {Schema, model} from 'mongoose'
 
-export interface RestaurantModel extends Document {
+export interface RestaurantModel extends mongoose.Document {
 	name: string
 	slug: string
 	rating: number

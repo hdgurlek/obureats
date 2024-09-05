@@ -1,6 +1,6 @@
-import {Schema, Types, model} from 'mongoose'
+import mongoose, {Schema, Types, model} from 'mongoose'
 
-export interface CategoryModel extends Document {
+export interface CategoryModel extends mongoose.Document {
 	slug: string
 	name: string
 	sequence: number

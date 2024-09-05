@@ -1,8 +1,10 @@
 import {JWT_REFRESH_SECRET} from '../constants/env'
+import {CONFLICT} from '../constants/http'
 import VerificationCodeType from '../constants/verificationCodeTypes'
 import Session from '../models/Session'
 import User from '../models/User'
 import VerificationCode from '../models/VerificationCode'
+import appAssert from '../utils/appAssert'
 import {oneYearFromNow} from '../utils/date'
 import jwt from 'jsonwebtoken'
 
@@ -12,9 +14,7 @@ export async function createAccount(data: CreateAccountParams) {
 	//verify existing user doesnt exist
 	const existingUser = await User.exists({email: data.email})
 
-	if (existingUser) {
-		throw new Error('User already exists')
-	}
+	appAssert(!existingUser, CONFLICT, 'Email already in use')
 
 	//create user
 	const user = await User.create({email: data.email, password: data.password})
@@ -50,7 +50,7 @@ export async function createAccount(data: CreateAccountParams) {
 	//return user & tokens
 
 	return {
-		user,
+		user: user.omitPassword(),
 		accessToken,
 		refreshToken,
 	}

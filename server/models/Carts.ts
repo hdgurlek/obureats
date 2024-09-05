@@ -1,6 +1,6 @@
-import {Schema, model} from 'mongoose'
+import mongoose, {Schema, model} from 'mongoose'
 
-export interface CartModel extends Document {
+export interface CartModel extends mongoose.Document {
 	restaurantSlug: string
 	userId: string // TODO User model will be implemented
 }

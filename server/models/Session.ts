@@ -1,7 +1,7 @@
 import mongoose, {Schema, Types, model} from 'mongoose'
 import {thirtyDaysFromNow} from '../utils/date'
 
-export interface SessionModel extends Document {
+export interface SessionModel extends mongoose.Document {
 	userId: mongoose.Types.ObjectId
 	userAgent?: string
 	createdAt: Date
