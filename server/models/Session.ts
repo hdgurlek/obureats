@@ -1,8 +1,9 @@
-import mongoose, {Schema, Types, model} from 'mongoose'
+import {Document, Types, Schema, model} from 'mongoose'
 import {thirtyDaysFromNow} from '../utils/date'
 
-export interface SessionModel extends mongoose.Document {
-	userId: mongoose.Types.ObjectId
+export interface SessionModel extends Document {
+	_id: Types.ObjectId
+	userId: Types.ObjectId
 	userAgent?: string
 	createdAt: Date
 	expiresAt: Date

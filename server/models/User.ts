@@ -1,7 +1,8 @@
-import mongoose, {Schema, model} from 'mongoose'
+import {Document, Types, Schema, model} from 'mongoose'
 import {compareValue, hashValue} from '../utils/bcrypt'
 
-export interface UserModel extends mongoose.Document {
+export interface UserModel extends Document {
+	_id: Types.ObjectId
 	email: string
 	password: string
 	verified: boolean

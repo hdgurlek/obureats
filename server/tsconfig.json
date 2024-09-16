@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "target": "ES6", // Adjust according to your target
+    "module": "commonjs", // Use the appropriate module type
+    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true, 
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

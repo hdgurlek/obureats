@@ -7,7 +7,7 @@ export async function getRestaurants(): Promise<Restaurant[]> {
 }
 
 export async function getRestaurant(slug: string): Promise<Restaurant> {
-	const model = await Restaurants.findOne({slug: slug})
+	const model = await Restaurants.findOne({slug: slug}).orFail()
 	return convertToRestaurant(model)
 }
 

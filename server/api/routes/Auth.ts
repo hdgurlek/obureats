@@ -3,7 +3,7 @@ import {loginHandler, logoutHandler, refreshHandler, registerHandler} from '../.
 
 const route = Router()
 
-const authRoutes = (app: Router) => {
+const auth = (app: Router) => {
 	app.use('/auth', route)
 
 	route.post('/register', registerHandler)
@@ -12,4 +12,4 @@ const authRoutes = (app: Router) => {
 	route.get('/logout', logoutHandler)
 }
 
-export default authRoutes
+export default auth

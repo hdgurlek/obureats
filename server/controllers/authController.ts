@@ -15,7 +15,7 @@ import {
 	getRefreshTokenCookieOptions,
 	setAuthCookies,
 } from '../utils/cookies'
-import {refreshTokenSignOptions, verifyToken} from '../utils/jwt'
+import {verifyToken} from '../utils/jwt'
 import {loginSchema, registerSchema} from './authSchemas'
 
 export const registerHandler = catchErrors(async (req, res) => {
@@ -55,7 +55,7 @@ export const loginHandler = catchErrors(async (req, res) => {
 })
 
 export const logoutHandler = catchErrors(async (req, res) => {
-	const accessToken = req.cookies.accessToken as string | undefined
+	const accessToken = req.cookies.accessToken as string
 	const {payload} = verifyToken(accessToken)
 	if (payload) {
 		await Session.findByIdAndDelete(payload.sessionId)

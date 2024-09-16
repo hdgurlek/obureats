@@ -18,7 +18,7 @@ export async function getRestaurantMenu(slug: string): Promise<Menu> {
 }
 
 export async function getRestaurantMenuItem(restaurantSlug: string, uuid: string): Promise<MenuItem> {
-	const item = await Items.findOne({restaurantSlug: restaurantSlug, uuid: uuid}).exec()
+	const item = await Items.findOne({restaurantSlug: restaurantSlug, uuid: uuid}).orFail().exec()
 	return convertToMenuItem(item)
 }
 

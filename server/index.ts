@@ -1,8 +1,8 @@
+import cookieParser from 'cookie-parser'
 import 'dotenv/config'
-import routes from './api/index'
+import {protectedRoutes, routes} from './api/index'
 import connectToDatabase from './config/db'
 import {APP_ORIGIN, NODE_ENV, PORT} from './constants/env'
-import cookieParser from 'cookie-parser'
 import errorHandler from './middleware/errorHandler'
 
 const express = require('express')
@@ -22,6 +22,7 @@ async function main() {
 	app.use(express.urlencoded({extended: true}))
 	app.use(cookieParser())
 	app.use(routes())
+	app.use(protectedRoutes())
 	app.use(errorHandler)
 
 	app.listen(PORT, () => {

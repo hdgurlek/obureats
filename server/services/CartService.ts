@@ -60,19 +60,18 @@ export async function updateItemInCart(itemUuid: string, quantity: number, userI
 		throw new Error('Item not found')
 	}
 
-	let cart = await Carts.findOne({userId: userId}).exec()
+	let cart = await Carts.findOne({userId: userId}).orFail().exec()
 
 	const filter = {cart: cart._id, item: item._id}
 	const update = {quantity: quantity}
-	let cartItem = null
 
 	if (quantity === 0) {
-		cartItem = await CartItems.findOneAndDelete({cart: cart._id, item: item._id})
+		await CartItems.findOneAndDelete({cart: cart._id, item: item._id})
 	} else {
-		cartItem = await CartItems.findOne({cart: cart._id, item: item._id})
+		let cartItem = await CartItems.findOne({cart: cart._id, item: item._id})
 		if (cartItem) {
 			cartItem.quantity = quantity
+			cartItem.save()
 		}
-		cartItem.save()
 	}
 }
