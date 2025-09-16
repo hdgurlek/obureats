@@ -31,7 +31,6 @@ export default function Header() {
 
 	const onLogin = useCallback(async () => {
 		await login()
-		console.log('B')
 		setIsLoggedIn(true)
 	}, [login])
 

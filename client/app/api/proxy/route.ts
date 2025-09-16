@@ -13,17 +13,11 @@ export async function GET(req: NextRequest) {
 	params.delete('url')
 
 	const fetchUrl = `${target}?${params.toString()}`
-	const response = await fetch(fetchUrl, {
-		headers: {
-			// forward client headers if needed
-			'Content-Type': 'application/json',
-			// add secure server-side headers
-			// Authorization: `Bearer ${process.env.SECRET_API_KEY}`,
-		},
+	const res = await fetch(fetchUrl, {
+		headers: req.headers,
 	})
 
-	const data = await response.json()
-	return NextResponse.json(data, {status: response.status})
+	return handleResponse(res)
 }
 
 export async function POST(req: NextRequest) {
@@ -36,15 +30,47 @@ export async function POST(req: NextRequest) {
 
 	const body = await req.json()
 
-	const response = await fetch(target, {
+	const res = await fetch(target, {
 		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			/*  Authorization: `Bearer ${process.env.SECRET_API_KEY}`,*/
-		},
+		headers: req.headers,
 		body: JSON.stringify(body),
 	})
 
-	const data = await response.json()
-	return NextResponse.json(data, {status: response.status})
+	return handleResponse(res)
+}
+
+export async function PUT(req: NextRequest) {
+	const url = new URL(req.url)
+	const target = url.searchParams.get('url')
+
+	if (!target) {
+		return NextResponse.json({error: 'Missing target URL'}, {status: 400})
+	}
+
+	const body = await req.json()
+
+	const res = await fetch(target, {
+		method: 'PUT',
+		headers: req.headers,
+		body: JSON.stringify(body),
+	})
+
+	return handleResponse(res)
+}
+
+async function handleResponse(res: Response) {
+	const contentType = res.headers.get('content-type') || ''
+
+	let body: any
+
+	if (contentType.includes('application/json')) {
+		body = await res.json()
+		return NextResponse.json(body, {status: res.status, headers: res.headers})
+	} else {
+		body = await res.text() // fallback for plain text
+		return new NextResponse(body, {
+			status: res.status,
+			headers: res.headers,
+		})
+	}
 }
