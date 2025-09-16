@@ -4,9 +4,9 @@
 ## Introduction
 This web application aims to replicate some of the core functionalities of Uber Eats, providing a platform where users can browse and order food from various restaurants.
 
-## Features (in progress)
+## Features 
 
-- User authentication
+- User authentication (in progress)
 - Browse restaurants and menus
 - Add items to the cart and place orders  
 
