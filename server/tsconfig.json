@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Adjust according to your target
-    "module": "commonjs", // Use the appropriate module type
+    "target": "ES6",
+    "module": "commonjs", 
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": [ "./node_modules/@types"]
   },
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts"], 
+  "outDir" : "dist",
 }

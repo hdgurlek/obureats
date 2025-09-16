@@ -7,7 +7,7 @@ const mainFont = Inter({subsets: ['latin'], display: 'swap'})
 const theme = createTheme({
 	typography: {
 		fontSize: 14,
-		fontFamily: mainFont.style.fontFamily,
+		fontFamily: `${mainFont.style.fontFamily}, Arial, sans-serif`,
 	},
 })
 

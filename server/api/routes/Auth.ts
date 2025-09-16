@@ -5,7 +5,6 @@ const route = Router()
 
 const auth = (app: Router) => {
 	app.use('/auth', route)
-
 	route.post('/register', registerHandler)
 	route.post('/login', loginHandler)
 	route.get('/refresh', refreshHandler)

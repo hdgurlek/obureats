@@ -9,7 +9,6 @@ const z = require('zod')
 export const routes = () => {
 	const router = Router()
 	restaurants(router)
-	carts(router)
 	auth(router)
 
 	return router
@@ -18,6 +17,7 @@ export const routes = () => {
 export const protectedRoutes = () => {
 	const router = Router()
 	user(router)
+	carts(router)
 	session(router)
 	return router
 }

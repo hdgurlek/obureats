@@ -21,7 +21,6 @@ const GridContainer = styled(Grid)(() => ({
 
 export default function RestaurantGrid() {
 	const {data: restaurantList} = useRestaurantList()
-
 	return (
 		<GridBox>
 			<GridContainer container>

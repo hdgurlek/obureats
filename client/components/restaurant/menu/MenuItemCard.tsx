@@ -92,7 +92,7 @@ export function MenuItemCard({item, restaurantSlug}: MenuItemCardProps) {
 	const {data: cart} = useCart()
 	const {mutate: addItemToCart} = useAddItemToCart(item.uuid, 1)
 	const quantity = useMemo(() => {
-		const itemInCart = cart?.items.find(i => i.itemUuid === item.uuid)
+		const itemInCart = cart?.items?.find(i => i.itemUuid === item.uuid)
 		return itemInCart?.quantity
 	}, [cart?.items, item.uuid])
 

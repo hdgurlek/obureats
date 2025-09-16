@@ -12,18 +12,13 @@
     "client": "yarn workspace @store-app/client start",
     "client:dev": "yarn workspace @store-app/client dev",
     "server": "yarn workspace @store-app/server start",
+    "server:dev": "yarn workspace @store-app/server dev",
     "build-client": "yarn workspace @store-app/client build",
     "build-server": "yarn workspace @store-app/server build",
     "start": "concurrently --kill-others-on-fail \"yarn client\"  \"yarn server\"",
-    "dev": "concurrently --kill-others-on-fail \"yarn client:dev\"  \"yarn server\""
+    "dev": "concurrently --kill-others-on-fail \"yarn client:dev\"  \"yarn server:dev\""
   },
   "dependencies": {
-    "concurrently": "^8.2.2",
-    "express": "^5.0.0",
-    "typescript": "^5.6.2"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^22.5.4"
+    "concurrently": "^8.2.2"
   }
 }

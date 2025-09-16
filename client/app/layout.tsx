@@ -12,14 +12,14 @@ export const metadata: Metadata = {
 export default function RootLayout(props: {children: React.ReactNode}) {
 	return (
 		<html lang="en">
-			<ThemeProvider theme={theme}>
-				<ReactQueryProvider>
-					<body style={{margin: 0}}>
+			<body style={{margin: 0}}>
+				<ThemeProvider theme={theme}>
+					<ReactQueryProvider>
 						<Header />
 						{props.children}
-					</body>
-				</ReactQueryProvider>
-			</ThemeProvider>
+					</ReactQueryProvider>
+				</ThemeProvider>
+			</body>
 		</html>
 	)
 }

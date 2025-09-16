@@ -1,27 +1,14 @@
 import {Router} from 'express'
-import {addItemToCart, getCart, updateItemInCart} from '../../services/CartService'
+import {addCartHandler, getCartHandler, updateCartHandler} from '../../controllers/cartController'
+import authenticate from '../../middleware/authenticate'
+
 const route = Router()
 
 const carts = (app: Router) => {
-	app.use('/carts', route)
-	const userId = '1' // TODO
-
-	route.get('/', async (req, res) => {
-		const cart = await getCart(userId)
-		res.send(cart)
-	})
-
-	route.post('/items/add', async (req, res) => {
-		const {itemUuid, quantity} = req.body
-		await addItemToCart(itemUuid, quantity, userId)
-		res.sendStatus(200)
-	})
-
-	route.post('/items/update', async (req, res) => {
-		const {itemUuid, quantity} = req.body
-		await updateItemInCart(itemUuid, quantity, userId)
-		res.sendStatus(200)
-	})
+	app.use('/carts', authenticate, route)
+	route.get('/', getCartHandler)
+	route.post('/items/add', addCartHandler)
+	route.post('/items/update', updateCartHandler)
 }
 
 export default carts

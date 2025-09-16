@@ -23,7 +23,7 @@ const CartItemsQuantityBadge = styled('div')(() => ({
 export default function Cart() {
 	const [isOpen, setIsOpen] = useState(false)
 	const {data: cart} = useCart()
-	const totalQuantity = cart?.items.flatMap(item => item.quantity).reduce((sum, quantity) => sum + quantity, 0)
+	const totalQuantity = cart?.items?.flatMap(item => item.quantity).reduce((sum, quantity) => sum + quantity, 0)
 
 	const onClose = useCallback(() => {
 		setIsOpen(false)

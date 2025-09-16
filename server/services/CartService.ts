@@ -1,14 +1,16 @@
-import {connection} from 'mongoose'
+import {Types} from 'mongoose'
 import {Cart} from '../api/types/response/Cart'
 import CartItems from '../models/CartItems'
 import Carts from '../models/Carts'
 import Items, {ItemModel} from '../models/Items'
 
-export async function getCart(userId: string) {
+export async function getCart(userId: Types.ObjectId): Promise<Cart> {
 	const cartModel = await Carts.findOne({userId: userId}).exec()
+
 	if (!cartModel) {
-		throw new Error('Cart not found')
+		return {restaurantSlug: undefined, items: [], totalPrice: undefined} as Cart
 	}
+
 	const cartItemModels = await CartItems.find({cart: cartModel._id}).populate<{item: ItemModel}>({path: 'item'}).exec()
 	let totalPrice: number = 0
 
@@ -26,13 +28,15 @@ export async function getCart(userId: string) {
 	return {restaurantSlug: cartModel.restaurantSlug, items: cartItems, totalPrice: totalPrice} as Cart
 }
 
-export async function addItemToCart(itemUuid: string, quantity: number, userId: string) {
+export async function addItemToCart(itemUuid: string, quantity: number, userId: Types.ObjectId) {
 	const item = await Items.findOne({uuid: itemUuid}).exec()
 	if (!item) {
 		throw new Error('Item not found')
 	}
 
 	let cart = await Carts.findOne({userId: userId}).exec()
+	console.log(`Add item to cart with user id: ${userId}`)
+
 	const restaurantSlug = item.restaurantSlug
 
 	if (!cart || cart.restaurantSlug !== restaurantSlug) {
@@ -54,7 +58,7 @@ export async function addItemToCart(itemUuid: string, quantity: number, userId: 
 	}
 }
 
-export async function updateItemInCart(itemUuid: string, quantity: number, userId: string) {
+export async function updateItemInCart(itemUuid: string, quantity: number, userId: Types.ObjectId) {
 	const item = await Items.findOne({uuid: itemUuid}).exec()
 	if (!item) {
 		throw new Error('Item not found')

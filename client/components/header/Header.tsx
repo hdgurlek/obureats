@@ -5,6 +5,8 @@ import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Cart from './cart/Cart'
+import {useCallback, useState} from 'react'
+import useLogin from '@/api/hooks/useLogin'
 
 export default function Header() {
 	const AppToolbar = styled(Toolbar)(() => ({
@@ -21,6 +23,22 @@ export default function Header() {
 		'&:hover': {},
 	}))
 
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+	const email: string = 'test1@test.com'
+	const password: string = '123123'
+	const {mutateAsync: login} = useLogin(email, password)
+
+	const onLogin = useCallback(async () => {
+		await login()
+		console.log('B')
+		setIsLoggedIn(true)
+	}, [login])
+
+	const onLogout = () => {
+		setIsLoggedIn(false)
+	}
+
 	return (
 		<AppBar sx={{flexGrow: 1, marginBottom: 2, height: '4rem'}} position="sticky">
 			<AppToolbar>
@@ -32,7 +50,14 @@ export default function Header() {
 						Obur&nbsp;<strong>Eats</strong>
 					</LogoButton>
 				</Box>
-				<Cart />
+				{isLoggedIn ? (
+					<>
+						<Cart />
+						<button onClick={onLogout}>Log Out</button>
+					</>
+				) : (
+					<button onClick={onLogin}>Log In</button>
+				)}
 			</AppToolbar>
 		</AppBar>
 	)

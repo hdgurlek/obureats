@@ -18,4 +18,4 @@ const restaurantSchema = new Schema({
 	deliveryTime: String,
 })
 
-export default model<RestaurantModel>('Restaurant', restaurantSchema)
+export default model<RestaurantModel>('Restaurant', restaurantSchema, 'restaurants')

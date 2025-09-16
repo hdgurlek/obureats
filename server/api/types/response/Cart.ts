@@ -1,5 +1,5 @@
 export type Cart = {
-	restaurantSlug: string
+	restaurantSlug?: string
 	items: CartItem[]
 	totalPrice?: number
 }

@@ -19,17 +19,10 @@ import {verifyToken} from '../utils/jwt'
 import {loginSchema, registerSchema} from './authSchemas'
 
 export const registerHandler = catchErrors(async (req, res) => {
-	const parsedRequest = registerSchema.parse({
+	const request = registerSchema.parse({
 		...req.body,
 		userAgent: req.headers['user-agent'],
-	})
-
-	// Type assertion to ensure correct typing
-	const request: CreateAccountParams = {
-		email: parsedRequest.email,
-		password: parsedRequest.password,
-		userAgent: parsedRequest.userAgent,
-	}
+	}) as CreateAccountParams
 
 	const {user, accessToken, refreshToken} = await createAccount(request)
 
@@ -37,16 +30,10 @@ export const registerHandler = catchErrors(async (req, res) => {
 })
 
 export const loginHandler = catchErrors(async (req, res) => {
-	const parsedRequest = loginSchema.parse({
+	const request = loginSchema.parse({
 		...req.body,
 		userAgent: req.headers['user-agent'],
-	})
-
-	const request: LoginParams = {
-		email: parsedRequest.email,
-		password: parsedRequest.password,
-		userAgent: parsedRequest.userAgent,
-	}
+	}) as LoginParams
 
 	const {accessToken, refreshToken} = await loginUser(request)
 	return setAuthCookies({res, accessToken, refreshToken}).status(OK).json({

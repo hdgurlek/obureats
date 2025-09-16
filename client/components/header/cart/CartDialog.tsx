@@ -81,7 +81,7 @@ export default function CartDialog({onClose}: CartDialogProps) {
 	const {data: cart} = useCart()
 	const {data: restaurant} = useRestaurant(cart?.restaurantSlug)
 
-	const isCartEmpty = !cart || cart.items.length === 0
+	const isCartEmpty = !cart || cart.items?.length === 0
 
 	return (
 		<div>
@@ -105,9 +105,7 @@ export default function CartDialog({onClose}: CartDialogProps) {
 							{restaurant?.name}
 						</Typography>
 						<CartItemsBox>
-							{cart.items.map(item => (
-								<CartItemRow key={item.itemUuid} item={item} />
-							))}
+							{cart && cart.items?.map(item => <CartItemRow key={item.itemUuid} item={item} />)}
 						</CartItemsBox>
 						{
 							<SubtotalItem>
