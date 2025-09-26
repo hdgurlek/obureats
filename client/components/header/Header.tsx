@@ -7,6 +7,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Cart from './cart/Cart'
 import {useCallback, useState} from 'react'
 import useLogin from '@/api/hooks/useLogin'
+import useUser from '@/api/hooks/useUser'
 
 export default function Header() {
 	const AppToolbar = styled(Toolbar)(() => ({
@@ -22,6 +23,8 @@ export default function Header() {
 		fontSize: '1.2rem',
 		'&:hover': {},
 	}))
+
+	const user = useUser()
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
 

@@ -1,11 +1,13 @@
+import {apiFetch} from '@/lib/apiClient'
 import {Cart} from '@/types/Cart'
 import {Menu, MenuItem} from '@/types/Menu'
 import {Restaurant} from '@/types/Restaurant'
+import {User} from '@/types/User'
 
 const API_URL = `/api/proxy?url=${process.env.NEXT_PUBLIC_API_URL}`
 
 export async function getRestaurants(): Promise<Restaurant[]> {
-	const response = await fetch(`${API_URL}/restaurants`, {
+	const response = await apiFetch(`${API_URL}/restaurants`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -16,7 +18,7 @@ export async function getRestaurants(): Promise<Restaurant[]> {
 }
 
 export async function getRestaurant(slug: string): Promise<Restaurant> {
-	const response = await fetch(`${API_URL}/restaurants/${slug}`, {
+	const response = await apiFetch(`${API_URL}/restaurants/${slug}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ export async function getRestaurant(slug: string): Promise<Restaurant> {
 }
 
 export async function getRestaurantMenu(slug: string): Promise<Menu> {
-	const response = await fetch(`${API_URL}/restaurants/${slug}/menu`, {
+	const response = await apiFetch(`${API_URL}/restaurants/${slug}/menu`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ export async function getRestaurantMenu(slug: string): Promise<Menu> {
 }
 
 export async function getMenuItem(slug: string, itemUuid: string): Promise<MenuItem> {
-	const response = await fetch(`${API_URL}/restaurants/${slug}/items/${itemUuid}`, {
+	const response = await apiFetch(`${API_URL}/restaurants/${slug}/items/${itemUuid}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ export async function getMenuItem(slug: string, itemUuid: string): Promise<MenuI
 }
 
 export async function getCart(): Promise<Cart> {
-	const response = await fetch(`${API_URL}/carts`, {
+	const response = await apiFetch(`${API_URL}/carts`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -60,7 +62,7 @@ export async function getCart(): Promise<Cart> {
 }
 
 export async function addItemToCart(itemUuid: string, quantity: number) {
-	await fetch(`${API_URL}/carts/items/add`, {
+	await apiFetch(`${API_URL}/carts/items/add`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -73,7 +75,7 @@ export async function addItemToCart(itemUuid: string, quantity: number) {
 }
 
 export async function updateItemInCart(itemUuid: string, quantity: number) {
-	await fetch(`${API_URL}/carts/items/update`, {
+	await apiFetch(`${API_URL}/carts/items/update`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -86,7 +88,7 @@ export async function updateItemInCart(itemUuid: string, quantity: number) {
 }
 
 export async function login(email: string, password: string) {
-	const response = await fetch(`${API_URL}/auth/login`, {
+	const response = await apiFetch(`${API_URL}/auth/login`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -95,6 +97,17 @@ export async function login(email: string, password: string) {
 			email,
 			password,
 		}),
+	})
+
+	return await response.json()
+}
+
+export async function getUser(): Promise<User> {
+	const response = await apiFetch(`${API_URL}/user`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
 	})
 
 	return await response.json()

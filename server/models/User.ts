@@ -1,5 +1,5 @@
 import {Document, Types, Schema, model} from 'mongoose'
-import {compareValue, hashValue} from '../utils/bcrypt'
+import {compareValue, hashValue} from '../lib/bcrypt'
 
 export interface UserModel extends Document {
 	_id: Types.ObjectId

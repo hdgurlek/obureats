@@ -15,7 +15,7 @@ import {
 	getRefreshTokenCookieOptions,
 	setAuthCookies,
 } from '../utils/cookies'
-import {verifyToken} from '../utils/jwt'
+import {verifyToken} from '../lib/jwt'
 import {loginSchema, registerSchema} from './authSchemas'
 
 export const registerHandler = catchErrors(async (req, res) => {

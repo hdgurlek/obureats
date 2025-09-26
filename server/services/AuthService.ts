@@ -6,7 +6,7 @@ import User from '../models/User'
 import VerificationCode from '../models/VerificationCode'
 import appAssert from '../utils/appAssert'
 import {ONE_DAY_MS, oneYearFromNow, thirtyDaysFromNow} from '../utils/date'
-import {RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken} from '../utils/jwt'
+import {RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken} from '../lib/jwt'
 
 export type CreateAccountParams = {email: string; password: string; userAgent?: string}
 
