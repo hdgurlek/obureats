@@ -26,7 +26,7 @@ export default function Header() {
 
 	const user = useUser()
 
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isLoggedIn, setIsLoggedIn] = useState(true)
 
 	const email: string = 'test1@test.com'
 	const password: string = '123123'

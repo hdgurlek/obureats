@@ -35,7 +35,6 @@ export async function addItemToCart(itemUuid: string, quantity: number, userId: 
 	}
 
 	let cart = await Carts.findOne({userId: userId}).exec()
-	console.log(`Add item to cart with user id: ${userId}`)
 
 	const restaurantSlug = item.restaurantSlug
 
@@ -51,7 +50,6 @@ export async function addItemToCart(itemUuid: string, quantity: number, userId: 
 
 	if (!cartItem) {
 		cartItem = await CartItems.create({cart: cart._id, item: item._id, quantity: quantity})
-		console.log('add item create')
 	} else {
 		cartItem.quantity += Number(quantity)
 		await cartItem.save()

@@ -2,10 +2,10 @@
 
 import useCart from '@/api/hooks/useCart'
 import useRestaurant from '@/api/hooks/useRestaurant'
-import CloseIcon from '@mui/icons-material/Close'
-import {Box, Button, IconButton, Paper, ThemeProvider, Typography, createTheme, styled} from '@mui/material'
-import CartItemRow from './CartItemRow'
 import {ShoppingCart} from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close'
+import {Box, Button, IconButton, Paper, Typography, styled} from '@mui/material'
+import CartItemRow from './CartItemRow'
 
 const CloseButton = styled(IconButton)(() => ({
 	position: 'absolute',
@@ -118,7 +118,7 @@ export default function CartDialog({onClose}: CartDialogProps) {
 							</SubtotalItem>
 						}
 						{
-							<CheckOutButton variant="contained" size="large">
+							<CheckOutButton href="/checkout" variant="contained" size="large">
 								Go to checkout
 							</CheckOutButton>
 						}

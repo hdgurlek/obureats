@@ -8,8 +8,10 @@ const useAddItemToCart = (itemUuid: string, quantity: number) => {
 		mutationFn: () => addItemToCart(itemUuid, quantity),
 		mutationKey: ['add-to-cart'],
 		onSuccess: () => {
-			console.log('invalidate')
 			queryClient.invalidateQueries({queryKey: ['cart']})
+		},
+		onError: (error: unknown) => {
+			console.error('Failed to add item to cart:', error)
 		},
 	})
 }

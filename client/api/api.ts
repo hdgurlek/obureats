@@ -1,6 +1,7 @@
 import {apiFetch} from '@/lib/apiClient'
 import {Cart} from '@/types/Cart'
 import {Menu, MenuItem} from '@/types/Menu'
+import {Order} from '@/types/Order'
 import {Restaurant} from '@/types/Restaurant'
 import {User} from '@/types/User'
 
@@ -108,6 +109,31 @@ export async function getUser(): Promise<User> {
 		headers: {
 			'Content-Type': 'application/json',
 		},
+	})
+
+	return await response.json()
+}
+
+export async function checkout(): Promise<{clientSecret: string; order: Order}> {
+	const response = await apiFetch(`${API_URL}/payments/checkout`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+
+		credentials: 'include',
+	})
+
+	return await response.json()
+}
+
+export async function getPaymentStatus(paymentIntentId: string): Promise<{status: string}> {
+	const response = await apiFetch(`${API_URL}/payments/status`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({paymentIntentId}),
 	})
 
 	return await response.json()
