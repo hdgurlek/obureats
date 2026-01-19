@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs", 
+    "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
-    "typeRoots": [ "./node_modules/@types"]
+   // "typeRoots": ["./node_modules/@types"],
+    "types": ["jest", "node"],
+    "outDir": "dist"
   },
-  "exclude": ["node_modules", "**/*.spec.ts"], 
-  "outDir" : "dist",
+  "exclude": ["node_modules", "dist"]
 }

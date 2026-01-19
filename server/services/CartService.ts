@@ -8,7 +8,7 @@ export async function getCart(userId: Types.ObjectId): Promise<Cart> {
 	const cartModel = await Carts.findOne({userId: userId}).exec()
 
 	if (!cartModel) {
-		return {restaurantSlug: undefined, items: [], totalPrice: undefined} as Cart
+		return {restaurantSlug: undefined, items: [], totalPrice: 0} as Cart
 	}
 
 	const cartItemModels = await CartItems.find({cart: cartModel._id}).populate<{item: ItemModel}>({path: 'item'}).exec()
@@ -29,6 +29,8 @@ export async function getCart(userId: Types.ObjectId): Promise<Cart> {
 }
 
 export async function addItemToCart(itemUuid: string, quantity: number, userId: Types.ObjectId) {
+	if (!Number.isInteger(quantity) || quantity < 0) throw new Error('Invalid quantity')
+
 	const item = await Items.findOne({uuid: itemUuid}).exec()
 	if (!item) {
 		throw new Error('Item not found')
@@ -54,26 +56,33 @@ export async function addItemToCart(itemUuid: string, quantity: number, userId: 
 		cartItem.quantity += Number(quantity)
 		await cartItem.save()
 	}
+
+	return await getCart(userId)
 }
 
 export async function updateItemInCart(itemUuid: string, quantity: number, userId: Types.ObjectId) {
+	if (!Number.isInteger(quantity) || quantity < 0) {
+		throw new Error('Invalid quantity')
+	}
+
 	const item = await Items.findOne({uuid: itemUuid}).exec()
 	if (!item) {
 		throw new Error('Item not found')
 	}
 
-	let cart = await Carts.findOne({userId: userId}).orFail().exec()
+	const cart = await Carts.findOne({userId}).orFail().exec()
 
-	const filter = {cart: cart._id, item: item._id}
-	const update = {quantity: quantity}
+	const cartItem = await CartItems.findOne({cart: cart._id, item: item._id}).exec()
+
+	if (!cartItem) {
+		throw new Error('Cart item not found')
+	}
 
 	if (quantity === 0) {
-		await CartItems.findOneAndDelete({cart: cart._id, item: item._id})
-	} else {
-		let cartItem = await CartItems.findOne({cart: cart._id, item: item._id})
-		if (cartItem) {
-			cartItem.quantity = quantity
-			cartItem.save()
-		}
+		await CartItems.deleteOne({_id: cartItem._id}).exec()
+		return
 	}
+
+	cartItem.quantity = quantity
+	await cartItem.save()
 }
