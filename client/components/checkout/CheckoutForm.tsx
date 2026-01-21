@@ -5,6 +5,18 @@ import {useState} from 'react'
 import Spinner from '../ui/Spinner'
 import {Button, styled} from '@mui/material'
 
+const PayButton = styled(Button)(() => ({
+	position: 'relative',
+	fontSize: '1rem',
+	fontWeight: 500,
+	background: '#000000',
+	color: '#fff',
+	'&:hover': {
+		backgroundColor: '#262626',
+	},
+	textTransform: 'none',
+}))
+
 export default function CheckoutForm() {
 	const stripe = useStripe()
 	const elements = useElements()
@@ -35,19 +47,6 @@ export default function CheckoutForm() {
 		setLoading(false)
 	}
 
-	const PayButton = styled(Button)(() => ({
-		position: 'relative',
-		fontSize: '1rem',
-		fontWeight: 500,
-		background: isLoading ? '#a7a7a7' : '#000000',
-		color: '#fff',
-		'&:hover': {
-			backgroundColor: '#262626',
-		},
-		textTransform: 'none',
-		':disabled': {isLoading},
-	}))
-
 	return (
 		<form id="payment-form" onSubmit={handleSubmit}>
 			<PaymentElement id="payment-element" />
@@ -59,9 +58,14 @@ export default function CheckoutForm() {
 				disabled={isLoading || !stripe || !elements}
 				type="submit"
 			>
-				{isLoading ? <Spinner /> : 'Place Order'}
+				{isLoading ? <Spinner data-testid="spinner" /> : 'Place Order'}
 			</PayButton>
-			{message && <div id="payment-message">{message}</div>}
+
+			{message && (
+				<div id="payment-message" data-testid="error-message">
+					{message}
+				</div>
+			)}
 		</form>
 	)
 }

@@ -19,7 +19,6 @@ export async function createPaymentIntent(
 			currency: 'eur',
 			payment_method_types: ['card'],
 			automatic_payment_methods: {enabled: false},
-			payment_method: 'pm_card_stripe',
 		})
 
 		return paymentIntent
