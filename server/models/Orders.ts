@@ -12,7 +12,7 @@ export interface OrderModel extends mongoose.Document {
 	userId: Types.ObjectId
 	cartId: Types.ObjectId
 	paymentIntentId: string
-	status: 'PENDING' | 'COMPLETED' | 'CANCELLED'
+	status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED' | 'PROCESSING' | 'REFUNDED'
 	items: OrderItem[]
 	totalPrice: number
 	createdAt: Date

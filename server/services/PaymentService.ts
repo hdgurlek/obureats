@@ -19,6 +19,10 @@ export async function createPaymentIntent(
 			currency: 'eur',
 			payment_method_types: ['card'],
 			automatic_payment_methods: {enabled: false},
+			metadata: {
+				userId: String(p0.metadata.userId),
+				...(p0.metadata.restaurantSlug && {restaurantSlug: p0.metadata.restaurantSlug}),
+			},
 		})
 
 		return paymentIntent
@@ -47,6 +51,16 @@ export async function updatePaymentIntent(
 	} catch (err: any) {
 		console.error('Stripe payment intent update failed:', err)
 		throw new Error(err?.message || 'PaymentIntent update failed')
+	}
+}
+
+export async function cancelPaymentIntent(paymentIntentId: string): Promise<Stripe.PaymentIntent> {
+	try {
+		const paymentIntent = await stripe.paymentIntents.cancel(paymentIntentId)
+		return paymentIntent
+	} catch (err: any) {
+		console.error('Stripe payment intent cancel failed:', err)
+		throw new Error(err?.message || 'PaymentIntent cancel failed')
 	}
 }
 

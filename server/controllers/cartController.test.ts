@@ -74,4 +74,36 @@ describe('cartController processing guard', () => {
 		expect(updateItemInCart).not.toHaveBeenCalled()
 		expect(updatePaymentIntent).not.toHaveBeenCalled()
 	})
+
+	it('updates order items when cart changes', async () => {
+		const pendingOrder = {
+			paymentIntentId: 'pi_1',
+			items: [],
+			totalPrice: 0,
+			save: jest.fn(),
+		}
+		;(Orders.findOne as jest.Mock).mockResolvedValue(pendingOrder)
+		;(getStatus as jest.Mock).mockResolvedValue({status: 'requires_payment_method'})
+		;(getCart as jest.Mock).mockResolvedValue({
+			items: [{itemUuid: 'i1', name: 'Item', quantity: 2, price: 10}],
+			totalPrice: 20,
+			restaurantSlug: 'r1',
+		})
+		;(updatePaymentIntent as jest.Mock).mockResolvedValue({id: 'pi_1'})
+
+		const req: any = {userId: 'u1', body: {itemUuid: 'i1', quantity: 2}}
+		const res = makeRes()
+		const next = makeNext()
+
+		await updateCartHandler(req, res, next)
+
+		expect(updateItemInCart).toHaveBeenCalled()
+		expect(updatePaymentIntent).toHaveBeenCalledWith('pi_1', {
+			amount: 20,
+			metadata: {restaurantSlug: 'r1', updatedAt: expect.any(String)},
+		})
+		expect(pendingOrder.items).toEqual([{itemUuid: 'i1', name: 'Item', quantity: 2, price: 10}])
+		expect(pendingOrder.totalPrice).toBe(20)
+		expect(pendingOrder.save).toHaveBeenCalled()
+	})
 })

@@ -9,16 +9,35 @@ import {useEffect, useState} from 'react'
 import {Card, styled} from '@mui/material'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+import {getCart} from '@/api/api'
+import {Cart} from '@/types/Cart'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export default function CheckoutPage() {
 	const [clientSecret, setClientSecret] = useState<string | null>(null)
+	const [cart, setCart] = useState<Cart | null>(null)
 	const {mutate: createPaymentIntent, data: paymentIntent} = usePaymentIntent()
 
 	useEffect(() => {
 		createPaymentIntent()
 	}, [createPaymentIntent])
+
+	useEffect(() => {
+		let isMounted = true
+		async function fetchCart() {
+			try {
+				const data = await getCart()
+				if (isMounted) setCart(data)
+			} catch {
+				if (isMounted) setCart(null)
+			}
+		}
+		fetchCart()
+		return () => {
+			isMounted = false
+		}
+	}, [])
 
 	useEffect(() => {
 		if (paymentIntent?.clientSecret) {
@@ -60,7 +79,8 @@ export default function CheckoutPage() {
 		marginBottom: '0.5rem',
 	}))
 
-	const total = paymentIntent?.order?.totalPrice
+	const items = cart?.items ?? paymentIntent?.order?.items ?? []
+	const total = cart?.totalPrice ?? paymentIntent?.order?.totalPrice
 
 	return (
 		<Box
@@ -84,7 +104,7 @@ export default function CheckoutPage() {
 					<Divider sx={{my: 2}} />
 
 					{/* Item list */}
-					{paymentIntent?.order?.items?.map((item: any) => (
+					{items.map((item: any) => (
 						<OrderRow key={item.itemUuid}>
 							<Typography variant="body1" sx={{flex: 1}}>
 								{item.name} × {item.quantity}
@@ -102,9 +122,7 @@ export default function CheckoutPage() {
 						</Typography>
 						<Typography variant="body2">
 							€
-							{paymentIntent?.order?.items
-								?.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0)
-								.toFixed(2)}
+							{items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0).toFixed(2)}
 						</Typography>
 					</OrderRow>
 
@@ -130,7 +148,7 @@ export default function CheckoutPage() {
 							Total
 						</Typography>
 						<Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>
-							€{(paymentIntent?.order?.totalPrice ?? paymentIntent?.order?.totalPrice ?? 0 / 100).toFixed(2)}
+							€{(total ?? 0).toFixed(2)}
 						</Typography>
 					</OrderRow>
 

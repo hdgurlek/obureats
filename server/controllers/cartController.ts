@@ -2,7 +2,7 @@ import Orders from '../models/Orders'
 import {CONFLICT, OK} from '../constants/http'
 import {addItemToCart, getCart, updateItemInCart} from '../services/CartService'
 import catchErrors from '../utils/catchErrors'
-import {getStatus, updatePaymentIntent} from '../services/PaymentService'
+import {cancelPaymentIntent, getStatus, updatePaymentIntent} from '../services/PaymentService'
 
 export const getCartHandler = catchErrors(async (req, res) => {
 	const cart = await getCart(req.userId)
@@ -26,6 +26,19 @@ export const addCartHandler = catchErrors(async (req, res) => {
 	const cart = await getCart(userId)
 	const totalPrice = cart.totalPrice ?? 0
 
+	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice === 0) {
+		try {
+			await cancelPaymentIntent(pendingOrder.paymentIntentId)
+			pendingOrder.items = cart.items
+			pendingOrder.totalPrice = totalPrice
+			pendingOrder.status = 'CANCELED'
+			await pendingOrder.save()
+		} catch (err: any) {
+			console.warn(`Failed to cancel PaymentIntent ${pendingOrder.paymentIntentId}:`, err?.message ?? err)
+		}
+		return res.sendStatus(OK)
+	}
+
 	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice > 0) {
 		try {
 			await updatePaymentIntent(pendingOrder.paymentIntentId, {
@@ -36,6 +49,7 @@ export const addCartHandler = catchErrors(async (req, res) => {
 				},
 			})
 
+			pendingOrder.items = cart.items
 			pendingOrder.totalPrice = totalPrice
 			await pendingOrder.save()
 		} catch (err: any) {
@@ -63,6 +77,19 @@ export const updateCartHandler = catchErrors(async (req, res) => {
 	const cart = await getCart(userId)
 	const totalPrice = cart.totalPrice ?? 0
 
+	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice === 0) {
+		try {
+			await cancelPaymentIntent(pendingOrder.paymentIntentId)
+			pendingOrder.items = cart.items
+			pendingOrder.totalPrice = totalPrice
+			pendingOrder.status = 'CANCELED'
+			await pendingOrder.save()
+		} catch (err: any) {
+			console.warn(`Failed to cancel PaymentIntent ${pendingOrder.paymentIntentId}:`, err?.message ?? err)
+		}
+		return res.sendStatus(OK)
+	}
+
 	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice > 0) {
 		try {
 			await updatePaymentIntent(pendingOrder.paymentIntentId, {
@@ -73,6 +100,7 @@ export const updateCartHandler = catchErrors(async (req, res) => {
 				},
 			})
 
+			pendingOrder.items = cart.items
 			pendingOrder.totalPrice = totalPrice
 			await pendingOrder.save()
 		} catch (err: any) {

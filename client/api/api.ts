@@ -128,12 +128,11 @@ export async function checkout(): Promise<{clientSecret: string; order: Order}> 
 }
 
 export async function getPaymentStatus(paymentIntentId: string): Promise<{status: string}> {
-	const response = await apiFetch(`${API_URL}/payments/status`, {
-		method: 'POST',
+	const response = await apiFetch(`${API_URL}/payments/status?pi=${paymentIntentId}`, {
+		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({paymentIntentId}),
 	})
 
 	return await response.json()
