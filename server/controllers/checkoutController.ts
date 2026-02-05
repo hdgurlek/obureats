@@ -6,8 +6,9 @@ import catchErrors from '../utils/catchErrors'
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-	apiVersion: '2025-09-30.clover',
+	apiVersion: '2025-10-29.clover',
 })
+const PROCESSING_TIMEOUT_SECONDS = 5 * 60
 
 export const checkoutHandler = catchErrors(async (req, res) => {
 	const userId = req.userId
@@ -62,8 +63,33 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 	// Existing order: fetch PI
 	const pi = await stripe.paymentIntents.retrieve(order.paymentIntentId)
 
+	// If PI is processing for too long, cancel and create a fresh one
+	if (pi.status === 'processing') {
+		const nowSeconds = Math.floor(Date.now() / 1000)
+		const ageSeconds = nowSeconds - (pi.created ?? nowSeconds)
+		if (ageSeconds > PROCESSING_TIMEOUT_SECONDS) {
+			try {
+				await stripe.paymentIntents.cancel(pi.id)
+			} catch (err: any) {
+				console.warn(`Failed to cancel stale PaymentIntent ${pi.id}:`, err?.message ?? err)
+				return res.status(INTERNAL_SERVER_ERROR).json({error: 'Failed to reset processing payment'})
+			}
+
+			const newPI = await createPaymentIntent(cart.totalPrice, {
+				metadata: {userId, restaurantSlug: cart.restaurantSlug},
+			})
+
+			order.paymentIntentId = newPI.id
+			await order.save()
+
+			return respondWith(order, newPI.client_secret!)
+		}
+
+		return respondWith(order, pi.client_secret!)
+	}
+
 	// If PI not usable → create a fresh one
-	if (['succeeded', 'canceled', 'processing'].includes(pi.status)) {
+	if (['succeeded', 'canceled'].includes(pi.status)) {
 		const newPI = await createPaymentIntent(cart.totalPrice, {
 			metadata: {userId, restaurantSlug: cart.restaurantSlug},
 		})

@@ -10,7 +10,9 @@ export default function SuccessPage() {
 
 	const searchParams = useSearchParams()
 	const paymentIntentId = searchParams.get('payment_intent')
-	const [status, setStatus] = useState<'loading' | 'success' | 'processing' | 'failed'>('loading')
+	const [status, setStatus] = useState<
+		'loading' | 'success' | 'processing' | 'failed' | 'action_required' | 'canceled'
+	>('loading')
 
 	useEffect(() => {
 		if (!paymentIntentId) {
@@ -28,7 +30,27 @@ export default function SuccessPage() {
 				})
 				const data = await res.json()
 				console.log('Payment status response:', data)
-				setStatus(data.status)
+				switch (data.status) {
+					case 'succeeded':
+						setStatus('success')
+						break
+					case 'processing':
+						setStatus('processing')
+						break
+					case 'requires_action':
+						setStatus('action_required')
+						break
+					case 'canceled':
+						setStatus('canceled')
+						break
+					case 'requires_payment_method':
+					case 'requires_confirmation':
+					case 'requires_capture':
+						setStatus('failed')
+						break
+					default:
+						setStatus('failed')
+				}
 			} catch {
 				setStatus('failed')
 			}
@@ -50,6 +72,24 @@ export default function SuccessPage() {
 			<Box p={4} textAlign="center">
 				<Typography variant="h5">Your payment is still processing…</Typography>
 				<Typography>Please wait a moment.</Typography>
+			</Box>
+		)
+
+	if (status === 'action_required')
+		return (
+			<Box p={4} textAlign="center">
+				<Typography variant="h5">Additional action required.</Typography>
+				<Typography>Please complete the payment authorization.</Typography>
+			</Box>
+		)
+
+	if (status === 'canceled')
+		return (
+			<Box p={4} textAlign="center">
+				<Typography variant="h5" color="error">
+					Payment canceled.
+				</Typography>
+				<Typography>Please try again.</Typography>
 			</Box>
 		)
 

@@ -1,8 +1,8 @@
 import Orders from '../models/Orders'
-import {OK} from '../constants/http'
+import {CONFLICT, OK} from '../constants/http'
 import {addItemToCart, getCart, updateItemInCart} from '../services/CartService'
 import catchErrors from '../utils/catchErrors'
-import {updatePaymentIntent} from '../services/PaymentService'
+import {getStatus, updatePaymentIntent} from '../services/PaymentService'
 
 export const getCartHandler = catchErrors(async (req, res) => {
 	const cart = await getCart(req.userId)
@@ -13,12 +13,18 @@ export const addCartHandler = catchErrors(async (req, res) => {
 	const {itemUuid, quantity} = req.body
 	const userId = req.userId
 
+	const pendingOrder = await Orders.findOne({userId, status: 'PENDING'})
+	if (pendingOrder?.paymentIntentId) {
+		const {status} = await getStatus(pendingOrder.paymentIntentId)
+		if (status === 'processing') {
+			return res.status(CONFLICT).json({error: 'Payment is processing. Cart changes are disabled.'})
+		}
+	}
+
 	await addItemToCart(itemUuid, quantity, userId)
 
 	const cart = await getCart(userId)
 	const totalPrice = cart.totalPrice ?? 0
-
-	const pendingOrder = await Orders.findOne({userId, status: 'PENDING'})
 
 	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice > 0) {
 		try {
@@ -44,12 +50,18 @@ export const updateCartHandler = catchErrors(async (req, res) => {
 	const {itemUuid, quantity} = req.body
 	const userId = req.userId
 
+	const pendingOrder = await Orders.findOne({userId, status: 'PENDING'})
+	if (pendingOrder?.paymentIntentId) {
+		const {status} = await getStatus(pendingOrder.paymentIntentId)
+		if (status === 'processing') {
+			return res.status(CONFLICT).json({error: 'Payment is processing. Cart changes are disabled.'})
+		}
+	}
+
 	await updateItemInCart(itemUuid, quantity, userId)
 
 	const cart = await getCart(userId)
 	const totalPrice = cart.totalPrice ?? 0
-
-	const pendingOrder = await Orders.findOne({userId, status: 'PENDING'})
 
 	if (pendingOrder && pendingOrder.paymentIntentId && totalPrice > 0) {
 		try {
