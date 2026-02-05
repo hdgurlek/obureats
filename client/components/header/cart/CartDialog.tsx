@@ -81,7 +81,8 @@ export default function CartDialog({onClose}: CartDialogProps) {
 	const {data: cart} = useCart()
 	const {data: restaurant} = useRestaurant(cart?.restaurantSlug)
 
-	const isCartEmpty = !cart || cart.items?.length === 0
+	const totalQuantity = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+	const isCartEmpty = totalQuantity === 0
 
 	return (
 		<div>

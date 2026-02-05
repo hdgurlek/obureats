@@ -5,9 +5,9 @@ import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Cart from './cart/Cart'
-import {useCallback, useState} from 'react'
-import useLogin from '@/api/hooks/useLogin'
+import {useCallback} from 'react'
 import useUser from '@/api/hooks/useUser'
+import useLogout from '@/api/hooks/useLogout'
 
 export default function Header() {
 	const AppToolbar = styled(Toolbar)(() => ({
@@ -26,20 +26,13 @@ export default function Header() {
 
 	const user = useUser()
 
-	const [isLoggedIn, setIsLoggedIn] = useState(true)
+	const {mutateAsync: logout} = useLogout()
 
-	const email: string = 'test1@test.com'
-	const password: string = '123123'
-	const {mutateAsync: login} = useLogin(email, password)
+	const onLogout = useCallback(async () => {
+		await logout()
+	}, [logout])
 
-	const onLogin = useCallback(async () => {
-		await login()
-		setIsLoggedIn(true)
-	}, [login])
-
-	const onLogout = () => {
-		setIsLoggedIn(false)
-	}
+	const isLoggedIn = Boolean(user.data?.email)
 
 	return (
 		<AppBar sx={{flexGrow: 1, marginBottom: 2, height: '4rem'}} position="sticky">
@@ -58,7 +51,9 @@ export default function Header() {
 						<button onClick={onLogout}>Log Out</button>
 					</>
 				) : (
-					<button onClick={onLogin}>Log In</button>
+					<Button href="/login" variant="text" size="small" sx={{color: '#000', textTransform: 'none'}}>
+						Log In
+					</Button>
 				)}
 			</AppToolbar>
 		</AppBar>

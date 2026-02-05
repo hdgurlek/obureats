@@ -29,7 +29,7 @@ export async function getCart(userId: Types.ObjectId): Promise<Cart> {
 }
 
 export async function addItemToCart(itemUuid: string, quantity: number, userId: Types.ObjectId) {
-	if (!Number.isInteger(quantity) || quantity < 0) throw new Error('Invalid quantity')
+	if (!Number.isInteger(quantity) || quantity <= 0) throw new Error('Invalid quantity')
 
 	const item = await Items.findOne({uuid: itemUuid}).exec()
 	if (!item) {

@@ -103,6 +103,17 @@ export async function login(email: string, password: string) {
 	return await response.json()
 }
 
+export async function logout(): Promise<{message: string}> {
+	const response = await apiFetch(`${API_URL}/auth/logout`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	return await response.json()
+}
+
 export async function getUser(): Promise<User> {
 	const response = await apiFetch(`${API_URL}/user`, {
 		method: 'GET',

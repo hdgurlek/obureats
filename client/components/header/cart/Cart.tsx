@@ -23,7 +23,7 @@ const CartItemsQuantityBadge = styled('div')(() => ({
 export default function Cart() {
 	const [isOpen, setIsOpen] = useState(false)
 	const {data: cart} = useCart()
-	const totalQuantity = cart?.items?.flatMap(item => item.quantity).reduce((sum, quantity) => sum + quantity, 0)
+	const totalQuantity = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
 	const onClose = useCallback(() => {
 		setIsOpen(false)
@@ -33,7 +33,7 @@ export default function Cart() {
 		<div>
 			<IconButton size="large" color="inherit" onClick={() => setIsOpen(!isOpen)}>
 				<ShoppingCartOutlined style={{color: 'black'}} />
-				{totalQuantity !== 0 && (
+				{totalQuantity > 0 && (
 					<CartItemsQuantityBadge>
 						<Typography variant="caption">{totalQuantity}</Typography>
 					</CartItemsQuantityBadge>
