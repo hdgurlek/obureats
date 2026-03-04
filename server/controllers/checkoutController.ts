@@ -5,9 +5,7 @@ import {createPaymentIntent} from '../services/PaymentService'
 import catchErrors from '../utils/catchErrors'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-	apiVersion: '2025-10-29.clover',
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {})
 const PROCESSING_TIMEOUT_SECONDS = 5 * 60
 
 export const checkoutHandler = catchErrors(async (req, res) => {
@@ -48,14 +46,34 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 			return res.status(INTERNAL_SERVER_ERROR).json({error: 'Failed to create payment intent'})
 		}
 
-		order = await Orders.create({
-			restaurantSlug: cart.restaurantSlug,
-			userId,
-			items: cart.items,
-			totalPrice: cart.totalPrice,
-			paymentIntentId: pi.id,
-			status: 'PENDING',
-		})
+		try {
+			order = await Orders.create({
+				restaurantSlug: cart.restaurantSlug,
+				userId,
+				items: cart.items,
+				totalPrice: cart.totalPrice,
+				paymentIntentId: pi.id,
+				status: 'PENDING',
+			})
+		} catch (err: any) {
+			if (err?.code === 11000) {
+				try {
+					await stripe.paymentIntents.cancel(pi.id)
+				} catch (cancelErr: any) {
+					console.warn(`Failed to cancel duplicate PaymentIntent ${pi.id}:`, cancelErr?.message ?? cancelErr)
+				}
+
+				const existingOrder = await Orders.findOne({userId, status: 'PENDING'})
+				if (existingOrder) {
+					const existingPI = await stripe.paymentIntents.retrieve(existingOrder.paymentIntentId)
+					if (!existingPI.client_secret) {
+						return res.status(INTERNAL_SERVER_ERROR).json({error: 'Failed to fetch existing payment intent'})
+					}
+					return respondWith(existingOrder, existingPI.client_secret)
+				}
+			}
+			throw err
+		}
 
 		return respondWith(order, pi.client_secret)
 	}

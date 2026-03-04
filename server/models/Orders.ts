@@ -44,4 +44,6 @@ const orderSchema = new Schema<OrderModel>(
 	{timestamps: true}
 )
 
+orderSchema.index({userId: 1, status: 1}, {unique: true, partialFilterExpression: {status: 'PENDING'}})
+
 export default model<OrderModel>('Order', orderSchema, 'orders')

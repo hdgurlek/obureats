@@ -4,9 +4,11 @@ import {useSearchParams} from 'next/navigation'
 import {useEffect, useState} from 'react'
 import {Box, Typography, CircularProgress} from '@mui/material'
 import {apiFetch} from '@/lib/apiClient'
+import {useQueryClient} from '@tanstack/react-query'
 
 export default function SuccessPage() {
 	const API_URL = `/api/proxy?url=${process.env.NEXT_PUBLIC_API_URL}`
+	const queryClient = useQueryClient()
 
 	const searchParams = useSearchParams()
 	const paymentIntentId = searchParams.get('payment_intent')
@@ -21,6 +23,8 @@ export default function SuccessPage() {
 		}
 
 		async function checkPayment() {
+			console.log('Checking payment status for PaymentIntent ID:', paymentIntentId)
+
 			try {
 				const res = await apiFetch(`${API_URL}/payments/status?pi=${paymentIntentId}`, {
 					method: 'GET',
@@ -58,6 +62,15 @@ export default function SuccessPage() {
 
 		checkPayment()
 	}, [paymentIntentId])
+
+	useEffect(() => {
+		console.log('Payment status changed:', status)
+		if (status === 'success') {
+			console.log('Payment successful, invalidating cart query')
+
+			queryClient.invalidateQueries({queryKey: ['cart']})
+		}
+	}, [queryClient, status])
 
 	if (status === 'loading')
 		return (
