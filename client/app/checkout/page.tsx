@@ -121,8 +121,7 @@ export default function CheckoutPage() {
 							Subtotal
 						</Typography>
 						<Typography variant="body2">
-							€
-							{items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0).toFixed(2)}
+							€{items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0).toFixed(2)}
 						</Typography>
 					</OrderRow>
 

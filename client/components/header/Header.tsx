@@ -5,11 +5,13 @@ import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Cart from './cart/Cart'
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import useUser from '@/api/hooks/useUser'
 import useLogout from '@/api/hooks/useLogout'
+import LeftSidebar from '../navigation/LeftSidebar'
 
 export default function Header() {
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 	const AppToolbar = styled(Toolbar)(() => ({
 		backgroundColor: '#fff',
 		height: '2rem',
@@ -35,9 +37,9 @@ export default function Header() {
 	const isLoggedIn = Boolean(user.data?.email)
 
 	return (
-		<AppBar sx={{flexGrow: 1, marginBottom: 2, height: '4rem'}} position="sticky">
+		<AppBar sx={{flexGrow: 1, marginBottom: 2, height: '3rem'}} position="sticky">
 			<AppToolbar>
-				<IconButton size="large" sx={{color: '#000'}}>
+				<IconButton size="large" sx={{color: '#000'}} onClick={() => setIsSidebarOpen(true)}>
 					<MenuIcon />
 				</IconButton>
 				<Box sx={{flexGrow: 1}}>
@@ -56,6 +58,7 @@ export default function Header() {
 					</Button>
 				)}
 			</AppToolbar>
+			<LeftSidebar open={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 		</AppBar>
 	)
 }

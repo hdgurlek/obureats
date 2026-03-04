@@ -1,13 +1,13 @@
 import {Request, Response} from 'express'
 import Stripe from 'stripe'
 import Orders from '../models/Orders'
+import {log} from 'node:console'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 	apiVersion: '2025-10-29.clover',
 })
 
 export const stripeWebhookHandler = async (req: Request, res: Response) => {
-	console.log('Webhook received:', req.body)
 	const sig = req.headers['stripe-signature']!
 	let event: Stripe.Event
 
@@ -18,15 +18,18 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
 	}
 
 	const paymentIntent = event.data.object as Stripe.PaymentIntent
-
+	console.log('Received event:', event.type, 'for PaymentIntent ID:', paymentIntent.id)
 	switch (event.type) {
 		case 'payment_intent.succeeded':
+			log('Payment succeeded for intent:', paymentIntent.id)
 			await Orders.findOneAndUpdate({paymentIntentId: paymentIntent.id}, {status: 'PAID'})
 			break
 		case 'payment_intent.payment_failed':
+			log('Payment failed for intent:', paymentIntent.id)
 			await Orders.findOneAndUpdate({paymentIntentId: paymentIntent.id}, {status: 'FAILED'})
 			break
 		case 'payment_intent.canceled':
+			log('Payment canceled for intent:', paymentIntent.id)
 			await Orders.findOneAndUpdate({paymentIntentId: paymentIntent.id}, {status: 'CANCELED'})
 			break
 	}
