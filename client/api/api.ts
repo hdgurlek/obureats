@@ -1,7 +1,7 @@
 import {apiFetch} from '@/lib/apiClient'
 import {Cart} from '@/types/Cart'
 import {Menu, MenuItem} from '@/types/Menu'
-import {Order} from '@/types/Order'
+import {CheckoutOrder, OrderHistoryOrder} from '@/types/Order'
 import {Restaurant} from '@/types/Restaurant'
 import {User} from '@/types/User'
 
@@ -125,7 +125,7 @@ export async function getUser(): Promise<User> {
 	return await response.json()
 }
 
-export async function checkout(): Promise<{clientSecret: string; order: Order}> {
+export async function checkout(): Promise<{clientSecret: string; order: CheckoutOrder}> {
 	const response = await apiFetch(`${API_URL}/payments/checkout`, {
 		method: 'POST',
 		headers: {
@@ -145,6 +145,22 @@ export async function getPaymentStatus(paymentIntentId: string): Promise<{status
 			'Content-Type': 'application/json',
 		},
 	})
+
+	return await response.json()
+}
+
+export async function getOrderHistory(): Promise<{orders: OrderHistoryOrder[]}> {
+	const response = await apiFetch(`${API_URL}/orders/history`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	if (!response.ok) {
+		const message = response.status === 401 ? 'Please log in to view your orders.' : 'Failed to load order history.'
+		throw new Error(message)
+	}
 
 	return await response.json()
 }
