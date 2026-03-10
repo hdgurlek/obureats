@@ -1,4 +1,5 @@
 import {Router} from 'express'
+import addresses from './routes/Addresses'
 import auth from './routes/Auth'
 import carts from './routes/Carts'
 import orders from './routes/Orders'
@@ -22,5 +23,6 @@ export const protectedRoutes = () => {
 	session(router)
 	payments(router)
 	orders(router)
+	addresses(router)
 	return router
 }

@@ -7,6 +7,13 @@ export interface OrderItem {
 	price: number
 }
 
+export interface DeliveryAddressSnapshot {
+	label: 'Home' | 'Work' | 'Other'
+	fullAddress: string
+	city: string
+	postalCode: string
+}
+
 export interface OrderModel extends mongoose.Document {
 	restaurantSlug: string
 	userId: Types.ObjectId
@@ -15,6 +22,7 @@ export interface OrderModel extends mongoose.Document {
 	status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED' | 'PROCESSING' | 'REFUNDED'
 	items: OrderItem[]
 	totalPrice: number
+	deliveryAddressSnapshot?: DeliveryAddressSnapshot
 	createdAt: Date
 }
 
@@ -40,6 +48,16 @@ const orderSchema = new Schema<OrderModel>(
 		},
 		items: {type: [orderItemSchema], required: true},
 		totalPrice: {type: Number, required: true, min: 0},
+		deliveryAddressSnapshot: {
+			type: {
+				label: {type: String, enum: ['Home', 'Work', 'Other'], required: true},
+				fullAddress: {type: String, required: true},
+				city: {type: String, required: true},
+				postalCode: {type: String, required: true},
+			},
+			required: false,
+			_id: false,
+		},
 	},
 	{timestamps: true}
 )

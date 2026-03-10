@@ -1,6 +1,14 @@
 import {Document, Types, Schema, model} from 'mongoose'
 import {compareValue, hashValue} from '../lib/bcrypt'
 
+export type PublicUser = {
+	_id: Types.ObjectId
+	email: string
+	verified: boolean
+	createdAt: Date
+	updatedAt: Date
+}
+
 export interface UserModel extends Document {
 	_id: Types.ObjectId
 	email: string
@@ -9,7 +17,7 @@ export interface UserModel extends Document {
 	createdAt: Date
 	updatedAt: Date
 	comparePassword(val: string): Promise<boolean>
-	omitPassword(): Pick<UserModel, '_id' | 'email' | 'verified' | 'createdAt' | 'updatedAt' | '__v'>
+	omitPassword(): PublicUser
 }
 
 const userSchema = new Schema(
@@ -30,10 +38,10 @@ userSchema.methods.comparePassword = async function (val: string) {
 	return compareValue(val, this.password)
 }
 
-userSchema.methods.omitPassword = function (val: string) {
+userSchema.methods.omitPassword = function () {
 	const user = this.toObject()
 	delete user.password
-	return user
+	return user as PublicUser
 }
 
 export default model<UserModel>('User', userSchema, 'users')

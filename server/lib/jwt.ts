@@ -14,8 +14,12 @@ export type AccessTokenPayload = {
 
 type SignOptionsAndSecret = SignOptions & {secret: string}
 
-const defaults: SignOptions = {
-	audience: ['user'],
+const signDefaults: SignOptions = {
+	audience: 'user',
+}
+
+const verifyDefaults: VerifyOptions = {
+	audience: 'user',
 }
 
 export const accessTokenSignOptions: SignOptionsAndSecret = {
@@ -30,25 +34,34 @@ export const refreshTokenSignOptions: SignOptionsAndSecret = {
 
 export const signToken = (payload: AccessTokenPayload | RefreshTokenPayload, options?: SignOptionsAndSecret) => {
 	const {secret, ...signOpts} = options || accessTokenSignOptions
-	return jwt.sign(payload, secret, {...defaults, ...signOpts})
+	return jwt.sign(payload, secret, {...signDefaults, ...signOpts})
 }
+type VerifyResult<T> =
+	| {payload: T; error?: undefined}
+	| {payload?: undefined; error: string}
 
 export const verifyToken = <TPayload extends object = AccessTokenPayload>(
 	token: string,
-	options?: VerifyOptions & {secret: string}
-) => {
-	const {secret = JWT_SECRET, ...verifyOpts} = options || {}
+	options: VerifyOptions & {secret?: string} = {}
+): VerifyResult<TPayload> => {
+	const {secret = JWT_SECRET, ...verifyOpts} = options
+
 	try {
-		const payload = jwt.verify(token, secret, {
-			...defaults,
+		const decoded = jwt.verify(token, secret, {
+			...verifyDefaults,
 			...verifyOpts,
-		}) as TPayload
-		return {
-			payload,
+		})
+
+		if (typeof decoded === 'string') {
+			return {error: 'Invalid token payload'}
 		}
-	} catch (error: any) {
-		return {
-			error: error.message,
+
+		return {payload: decoded as unknown as TPayload}
+	} catch (error) {
+		if (error instanceof Error) {
+			return {error: error.message}
 		}
+
+		return {error: 'Token verification failed'}
 	}
 }

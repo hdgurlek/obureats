@@ -25,6 +25,7 @@ export const getOrderHistoryHandler = catchErrors(async (req, res) => {
 			restaurantSlug: order.restaurantSlug,
 			restaurantName: restaurantsBySlug.get(order.restaurantSlug)?.name ?? order.restaurantSlug,
 			restaurantImage: restaurantsBySlug.get(order.restaurantSlug)?.image ?? null,
+			deliveryAddressSnapshot: order.deliveryAddressSnapshot ?? undefined,
 			createdAt: order.createdAt,
 			paymentStatus: order.status,
 		})),

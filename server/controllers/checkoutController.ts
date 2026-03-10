@@ -1,12 +1,17 @@
 import {BAD_REQUEST, INTERNAL_SERVER_ERROR, OK} from '../constants/http'
 import Orders from '../models/Orders'
+import UserAddress from '../models/UserAddress'
 import {getCart} from '../services/CartService'
 import {createPaymentIntent} from '../services/PaymentService'
 import catchErrors from '../utils/catchErrors'
 import Stripe from 'stripe'
+import {z} from 'zod'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {})
 const PROCESSING_TIMEOUT_SECONDS = 5 * 60
+const checkoutSchema = z.object({
+	addressId: z.string().regex(/^[a-f\d]{24}$/i, 'Invalid address id'),
+})
 
 export const checkoutHandler = catchErrors(async (req, res) => {
 	const userId = req.userId
@@ -23,6 +28,19 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 		throw new Error('Cart total price is undefined or invalid')
 	}
 
+	const {addressId} = checkoutSchema.parse(req.body)
+	const userAddress = await UserAddress.findOne({_id: addressId, userId})
+	if (!userAddress) {
+		return res.status(BAD_REQUEST).json({error: 'Address not found'})
+	}
+
+	const deliveryAddressSnapshot = {
+		label: userAddress.label,
+		fullAddress: userAddress.fullAddress,
+		city: userAddress.city,
+		postalCode: userAddress.postalCode,
+	}
+
 	let order = await Orders.findOne({userId, status: 'PENDING'})
 
 	async function respondWith(order: any, clientSecret: string) {
@@ -32,6 +50,7 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 				id: order._id,
 				items: order.items,
 				totalPrice: order.totalPrice,
+				deliveryAddressSnapshot: order.deliveryAddressSnapshot,
 			},
 		})
 	}
@@ -54,6 +73,7 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 				totalPrice: cart.totalPrice,
 				paymentIntentId: pi.id,
 				status: 'PENDING',
+				deliveryAddressSnapshot,
 			})
 		} catch (err: any) {
 			if (err?.code === 11000) {
@@ -79,6 +99,9 @@ export const checkoutHandler = catchErrors(async (req, res) => {
 	}
 
 	// Existing order: fetch PI
+	order.deliveryAddressSnapshot = deliveryAddressSnapshot
+	await order.save()
+
 	const pi = await stripe.paymentIntents.retrieve(order.paymentIntentId)
 
 	// If PI is processing for too long, cancel and create a fresh one
