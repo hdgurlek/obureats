@@ -5,9 +5,8 @@ import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Cart from './cart/Cart'
-import {useCallback, useState} from 'react'
+import {useState} from 'react'
 import useUser from '@/api/hooks/useUser'
-import useLogout from '@/api/hooks/useLogout'
 import LeftSidebar from '../navigation/LeftSidebar'
 
 export default function Header() {
@@ -28,12 +27,6 @@ export default function Header() {
 
 	const user = useUser()
 
-	const {mutateAsync: logout} = useLogout()
-
-	const onLogout = useCallback(async () => {
-		await logout()
-	}, [logout])
-
 	const isLoggedIn = Boolean(user.data?.email)
 
 	return (
@@ -50,10 +43,19 @@ export default function Header() {
 				{isLoggedIn ? (
 					<>
 						<Cart />
-						<button onClick={onLogout}>Log Out</button>
 					</>
 				) : (
-					<Button href="/login" variant="text" size="small" sx={{color: '#000', textTransform: 'none'}}>
+					<Button
+						href="/login"
+						variant="outlined"
+						size="small"
+						sx={{
+							color: '#000',
+							borderColor: '#000',
+							textTransform: 'none',
+							'&:hover': {borderColor: '#000', backgroundColor: 'rgba(0,0,0,0.04)'},
+						}}
+					>
 						Log In
 					</Button>
 				)}

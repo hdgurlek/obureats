@@ -9,6 +9,9 @@ const useLogout = () => {
 		mutationKey: ['logout'],
 		onSuccess: () => {
 			queryClient.invalidateQueries({queryKey: ['user']})
+			queryClient.invalidateQueries({queryKey: ['cart']})
+			queryClient.invalidateQueries({queryKey: ['addresses']})
+			queryClient.invalidateQueries({queryKey: ['orders-history']})
 		},
 	})
 }
