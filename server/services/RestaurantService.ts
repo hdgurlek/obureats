@@ -16,7 +16,8 @@ function convertToRestaurant(model: RestaurantModel): Restaurant {
 		name: model.name,
 		slug: model.slug,
 		rating: model.rating,
-		favorite: model.favorite,
+		// Per-user favorite state is computed in controllers when authenticated.
+		favorite: false,
 		image: model.image,
 		deliveryTime: model.deliveryTime,
 	}

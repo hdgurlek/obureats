@@ -240,3 +240,48 @@ export async function setDefaultAddress(id: string): Promise<{address: UserAddre
 
 	return await response.json()
 }
+
+export async function getFavorites(): Promise<{restaurants: Restaurant[]}> {
+	const response = await apiFetch(`${API_URL}/favorites`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	if (!response.ok) {
+		const message = response.status === 401 ? 'Please log in to view favorites.' : 'Failed to load favorites.'
+		throw new Error(message)
+	}
+
+	return await response.json()
+}
+
+export async function addFavorite(slug: string): Promise<void> {
+	const response = await apiFetch(`${API_URL}/favorites/${slug}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	if (!response.ok) {
+		const message = response.status === 401 ? 'Please log in to favorite restaurants.' : 'Failed to favorite restaurant.'
+		throw new Error(message)
+	}
+}
+
+export async function removeFavorite(slug: string): Promise<void> {
+	const response = await apiFetch(`${API_URL}/favorites/${slug}`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	if (!response.ok) {
+		const message =
+			response.status === 401 ? 'Please log in to manage favorites.' : 'Failed to remove favorite restaurant.'
+		throw new Error(message)
+	}
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import useToggleFavorite from '@/api/hooks/useToggleFavorite'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -10,6 +11,7 @@ import {Favorite, FavoriteBorderOutlined} from '@mui/icons-material'
 import {IconButton} from '@mui/material'
 import {Restaurant} from '../../types/Restaurant'
 import Link from 'next/link'
+import {useEffect, useState} from 'react'
 
 const Container = styled(Card)(() => ({
 	display: 'flex',
@@ -96,6 +98,13 @@ const DeliveryTime = styled(Typography)(() => ({
 }))
 
 export function RestaurantCard(props: Restaurant) {
+	const [isFavorite, setIsFavorite] = useState<boolean>(props.favorite)
+	const {mutate: toggleFavorite, isPending} = useToggleFavorite()
+
+	useEffect(() => {
+		setIsFavorite(props.favorite)
+	}, [props.favorite])
+
 	return (
 		<Container>
 			<Link href={`/restaurant/${props.slug}`} style={{textDecoration: 'none'}} passHref>
@@ -104,9 +113,20 @@ export function RestaurantCard(props: Restaurant) {
 						aria-label="favorite"
 						onClick={e => {
 							e.preventDefault()
+							const next = !isFavorite
+							setIsFavorite(next)
+							toggleFavorite(
+								{slug: props.slug, nextFavorite: next},
+								{
+									onError: () => {
+										setIsFavorite(!next)
+									},
+								}
+							)
 						}}
+						disabled={isPending}
 					>
-						{props.favorite ? <FilledFavoriteIcon /> : <FavoriteIcon />}
+						{isFavorite ? <FilledFavoriteIcon /> : <FavoriteIcon />}
 					</FavoriteButton>
 				</RestaurantImage>
 				<InfoBox>

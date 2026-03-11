@@ -62,6 +62,28 @@ export async function PUT(req: NextRequest) {
 	return handleResponse(res)
 }
 
+export async function DELETE(req: NextRequest) {
+	const url = new URL(req.url)
+	const target = url.searchParams.get('url')
+
+	if (!target) {
+		return NextResponse.json({error: 'Missing target URL'}, {status: 400})
+	}
+
+	const bodyText = await req.text()
+
+	const headers = new Headers(req.headers)
+	headers.delete('content-length')
+
+	const res = await fetch(target, {
+		method: 'DELETE',
+		headers,
+		body: bodyText && bodyText.trim() !== '' ? bodyText : undefined,
+	})
+
+	return handleResponse(res)
+}
+
 async function handleResponse(res: Response) {
 	const contentType = res.headers.get('content-type') || ''
 
