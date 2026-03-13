@@ -4,28 +4,8 @@ import useCart from '@/api/hooks/useCart'
 import useRestaurant from '@/api/hooks/useRestaurant'
 import {ShoppingCart} from '@mui/icons-material'
 import CloseIcon from '@mui/icons-material/Close'
-import {Box, Button, IconButton, Paper, Typography, styled} from '@mui/material'
+import {Box, Button, Divider, Drawer, IconButton, Typography, styled} from '@mui/material'
 import CartItemRow from './CartItemRow'
-
-const CloseButton = styled(IconButton)(() => ({
-	position: 'absolute',
-	top: '0.5rem',
-	left: '0.5rem',
-	padding: '8px',
-	color: '#000',
-}))
-
-const CartContainer = styled(Paper)(() => ({
-	width: '26rem',
-	minHeight: '15rem',
-	maxHeight: '30rem',
-	position: 'absolute',
-	right: '2rem',
-	top: '3.3rem',
-	padding: '1.5rem',
-	display: 'flex',
-	flexDirection: 'column',
-}))
 
 const CheckOutButton = styled(Button)(() => ({
 	position: 'relative',
@@ -44,7 +24,7 @@ const CartItemsBox = styled(Box)(() => ({
 	flexDirection: 'column',
 	width: '100%',
 	height: '100%',
-	overflowY: 'scroll',
+	overflowY: 'auto',
 	flexGrow: 1,
 	paddingBottom: '1rem',
 	msOverflow: 'auto',
@@ -74,10 +54,11 @@ const CartEmptyText = styled(Typography)(() => ({
 }))
 
 interface CartDialogProps {
+	open: boolean
 	onClose: () => void
 }
 
-export default function CartDialog({onClose}: CartDialogProps) {
+export default function CartDialog({open, onClose}: CartDialogProps) {
 	const {data: cart} = useCart()
 	const {data: restaurant} = useRestaurant(cart?.restaurantSlug)
 
@@ -85,47 +66,67 @@ export default function CartDialog({onClose}: CartDialogProps) {
 	const isCartEmpty = totalQuantity === 0
 
 	return (
-		<div>
-			<CartContainer elevation={6}>
-				{
-					<CloseButton onClick={onClose}>
-						<CloseIcon />
-					</CloseButton>
-				}
-				{isCartEmpty && (
+		<Drawer
+			anchor="right"
+			open={open}
+			onClose={onClose}
+			PaperProps={{
+				sx: {
+					width: {xs: '100vw', sm: 380},
+					backgroundColor: '#ffffff',
+					color: '#000000',
+					borderLeft: '1px solid #e5e5e5',
+					display: 'flex',
+					flexDirection: 'column',
+				},
+			}}
+			BackdropProps={{sx: {backgroundColor: 'rgba(0,0,0,0.2)'}}}
+		>
+			<Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2}}>
+				<Typography variant="h6" sx={{fontWeight: 700}}>
+					Cart
+				</Typography>
+				<IconButton onClick={onClose} size="small" sx={{color: '#000'}}>
+					<CloseIcon />
+				</IconButton>
+			</Box>
+			<Divider />
+
+			<Box sx={{p: 2, flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0}}>
+				{isCartEmpty ? (
 					<CartEmptyBox>
 						<ShoppingCart fontSize="large" style={{color: 'black'}} />
 						<CartEmptyText>Add items from a restaurant or store to start a new cart</CartEmptyText>
 					</CartEmptyBox>
-				)}
-
-				{!isCartEmpty && (
+				) : (
 					<>
-						<br></br>
-						<Typography sx={{paddingTop: '0.5rem', fontWeight: 500}} variant="h4" gutterBottom>
+						<Typography sx={{fontWeight: 700, mb: 1}} variant="h5">
 							{restaurant?.name}
 						</Typography>
 						<CartItemsBox>
-							{cart && cart.items?.map(item => <CartItemRow key={item.itemUuid} item={item} />)}
+							{cart && cart.items?.map((item) => <CartItemRow key={item.itemUuid} item={item} />)}
 						</CartItemsBox>
-						{
-							<SubtotalItem>
-								<Typography flexGrow={1} fontWeight={500} variant="h6">
-									Subtotal
-								</Typography>
-								<Typography fontWeight={500} variant="h6">
-									€{cart.totalPrice}
-								</Typography>
-							</SubtotalItem>
-						}
-						{
-							<CheckOutButton href="/checkout" variant="contained" size="large">
-								Go to checkout
-							</CheckOutButton>
-						}
+
+						<SubtotalItem>
+							<Typography flexGrow={1} fontWeight={600} variant="h6">
+								Subtotal
+							</Typography>
+							<Typography fontWeight={600} variant="h6">
+								€{cart?.totalPrice}
+							</Typography>
+						</SubtotalItem>
+
+						<CheckOutButton
+							href="/checkout"
+							variant="contained"
+							size="large"
+							onClick={onClose}
+						>
+							Go to checkout
+						</CheckOutButton>
 					</>
 				)}
-			</CartContainer>
-		</div>
+			</Box>
+		</Drawer>
 	)
 }

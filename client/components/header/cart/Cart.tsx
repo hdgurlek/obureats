@@ -31,7 +31,7 @@ export default function Cart() {
 
 	return (
 		<div>
-			<IconButton size="large" color="inherit" onClick={() => setIsOpen(!isOpen)}>
+			<IconButton size="large" color="inherit" onClick={() => setIsOpen(true)}>
 				<ShoppingCartOutlined style={{color: 'black'}} />
 				{totalQuantity > 0 && (
 					<CartItemsQuantityBadge>
@@ -39,7 +39,7 @@ export default function Cart() {
 					</CartItemsQuantityBadge>
 				)}
 			</IconButton>
-			{isOpen && <CartDialog onClose={onClose} />}
+			<CartDialog open={isOpen} onClose={onClose} />
 		</div>
 	)
 }

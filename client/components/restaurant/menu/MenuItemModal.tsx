@@ -23,7 +23,7 @@ const CloseButton = styled(IconButton)(() => ({
 	top: 4,
 	right: 4,
 	padding: '8px',
-	color: '#FFF',
+	color: '#000',
 }))
 
 const ModalBox = styled(Box)(() => ({
@@ -95,7 +95,7 @@ export default function MenuItemModal({slug, itemId: itemUuid}: MenuItemModalPro
 
 	const [quantity, setQuantity] = useState(1)
 	const {data: menuItem, isLoading: isMenuItemLoading} = useMenuItem(slug, itemUuid)
-	const {mutate: addItemToCart} = useAddItemToCart(itemUuid, quantity)
+	const {mutateAsync: addItemToCart, isPending: isAdding} = useAddItemToCart(itemUuid, quantity)
 
 	const handleChanges = (event: SelectChangeEvent) => {
 		setQuantity(parseInt(event.target.value))
@@ -120,7 +120,7 @@ export default function MenuItemModal({slug, itemId: itemUuid}: MenuItemModalPro
 		>
 			<ModalBox>
 				{
-					<CloseButton>
+					<CloseButton onClick={() => router.back()}>
 						<CloseIcon></CloseIcon>
 					</CloseButton>
 				}
@@ -143,7 +143,14 @@ export default function MenuItemModal({slug, itemId: itemUuid}: MenuItemModalPro
 								<Select sx={{height: '3rem'}} value={quantity.toString()} onChange={handleChanges}>
 									{quantities}
 								</Select>
-								<AddButton variant="contained" onClick={() => addItemToCart()}>
+								<AddButton
+									variant="contained"
+									disabled={isAdding}
+									onClick={async () => {
+										await addItemToCart()
+										router.back()
+									}}
+								>
 									Add {quantity} to Order - € {menuItem.price * quantity}
 								</AddButton>
 							</AddBox>
